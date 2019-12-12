@@ -1,0 +1,35 @@
+<% include ../partials/header-not-logged-in.html.ejs %>
+
+<div id="content" class="container">
+
+    <div class="col-md-6 col-md-offset-3">
+
+        <h1>Oops.. We cannot verify your account.</h1>
+
+        <p>Please click the link below to to resend verification email and enjoy these features:</p>
+
+        <ul>
+            <li>Publish a Book</li>
+            <li>Upload Cover Design</li>
+            <li>Buy from Marketplace</li>
+        </ul>
+        <form method="post" id="verifyemail">
+
+        <input name="email" type="hidden" value="<%=email%>"/>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-6">
+                    <p><a href="/account/login" class="btn btn-link pull-left">Skip Verification for Now</a></p>
+                </div>
+                <div class="col-sm-6">
+                    <input type="submit" class="btn btn-primary form-control" value="Re-send Verification Email">
+                </div>
+
+            </div>
+        </div>
+        </form>
+
+    </div>
+</div>
+<% include ../partials/footer-menu.html.ejs %>
+<% include ../partials/footer.html.ejs %>

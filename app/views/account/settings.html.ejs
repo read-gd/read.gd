@@ -1,0 +1,407 @@
+<% include ../partials/header.html.ejs %>
+
+<div id="content" class="container settings">
+
+	<% if ( locals.message) {%><div style="color:red"><%= message%></div><%}%>
+
+	<h1>Personal Information</h1>
+	<ul class="list-unstyled">
+		<li><a href="/account/password" class="btn-link">Change Password</a></li>
+	</ul>
+	<hr>
+	<br>
+	<form class="form" id="profile-form" role="form" method="post" action="/account/settings" enctype="multipart/form-data">
+
+		<div class="row">
+			<div class="col-md-2 col-sm-4 col-xs-4">
+				<div class="form-group">
+				    <label>Profile photo</label>
+				    <% if (user.photo) { %>
+				    	<div id="profile-photo">
+					    	<img src="<%= user.photo+'?dim=200x200' %>" class="img-thumbnail img-responsive" />
+							<input type="hidden" name="photo" value="<%= user.photo %>">
+					    	<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					    </div>
+					<%} else { %>
+						<input type="file" name="photo" onchange="uploadProfilePhoto(this)">
+					<% } %>
+				</div>
+			</div>
+
+			<div class="col-md-5 col-sm-8 col-xs-8">
+				<div class="form-group">
+				    <label for="firstname" class="">First Name</label>
+				    <input type="text" class="form-control" name="firstname" placeholder="First Name" value="<%= user.firstname ? user.firstname : '' %>">
+				</div>
+
+				<div class="form-group">
+				    <label for="lastname" class="">Last Name</label>
+				    <input type="text" class="form-control" name="lastname" placeholder="Last Name" value="<%= user.lastname ? user.lastname : '' %>">
+				</div>
+			</div>
+
+			<div class="col-md-5 col-sm-8 col-xs-12">
+
+			<div class="form-group">
+				    <label for="email" class="">Email</label>
+				    <input type="text" class="form-control" name="email" placeholder="Email" value="<%= user.email ? user.email : '' %>">
+				</div>
+				<div class="form-group">
+				    <label for="phone" class="">Phone</label>
+				    <input type="text" class="form-control" name="number" placeholder="Phone" value="<%= user.number ? user.number : '' %>">
+				</div>
+				<div class="form-group">
+				    <label for="website" class="">Website</label>
+				    <input type="text" class="form-control" name="website" placeholder="Website" value="<%= user.website ? user.website : '' %>">
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-10 col-md-offset-2">
+				<div class="form-group">
+                    <label for="problem" class="control-label">About me</label>
+                    <textarea class="form-control" id="description" name="description" rows="10"><%= user.description ? user.description : '' %></textarea>
+                </div>
+			</div>
+		</div>
+
+		<hr class="divider">
+		<h3>Portfolio</h3>
+		<div class="row"><!-- start of portfolio section -->
+			<div class="col-md-12 col-sm-12" id="portfolio">
+				<% if (user.portfolio != "") {
+					user.portfolio.forEach(function(item, index){
+				%>
+
+				<div class="well item">
+					<input type="text" value="<%= index %>" class="count hidden">
+					<div class="row">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<button type="button" class="close clearfix" aria-label="Close"><small>Remove</small> <span aria-hidden="true">&times;</span></button>
+						</div>
+					</div>
+					<div class="row">
+
+						<div class="col-md-3 col-sm-3 col-xs-12">
+							<div class="form-group">
+							    <div class="portfolio-photo">
+							    	<img src="<%= item.photo+'?dim=200x200' %>" class="img-thumbnail img-responsive" />
+									<input class="hidden" name="portfoliophoto[<%= index %>]" value="<%= item.photo %>">
+							    	<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							    </div>
+							</div>
+						</div>
+
+						<div class="col-md-9 col-sm-9 col-xs-12">
+							<div class="form-group">
+							    <label for="portfolioname[<%= index %>]" class="">Name</label>
+							    <input type="text" class="form-control" name="portfolioname[<%= index %>]" placeholder="" value="<%= item.name %>">
+							</div>
+
+							<div class="form-group">
+							    <label for="portfoliodescription[<%= index %>]" class="">Description</label>
+							    <textarea class="form-control" name="portfoliodescription[<%= index %>]" rows="5"><%= item.description %></textarea>
+							</div>
+
+							<div class="form-group">
+							    <label for="portfoliourl[<%= index %>]" class="">URL</label>
+							    <input type="text" class="form-control" name="portfoliourl[<%= index %>]" placeholder="" value="<%= item.url %>">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<%
+					});
+
+				} else {
+
+				%>
+
+				<div class="well item">
+					<input type="text" value="0" class="count hidden">
+					<div class="row">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<button type="button" class="close clearfix" aria-label="Close"><small>Remove</small> <span aria-hidden="true">&times;</span></button>
+						</div>
+					</div>
+					<div class="row">
+
+						<div class="col-md-3 col-sm-3 col-xs-12">
+							<div class="form-group">
+							    <label for="portfoliophoto[0]" class="">Photo</label>
+							    <input type="file" name="portfoliophoto[0]">
+							</div>
+						</div>
+
+						<div class="col-md-9 col-sm-9 col-xs-12">
+							<div class="form-group">
+							    <label for="portfolioname[0]" class="">Name</label>
+							    <input type="text" class="form-control" name="portfolioname[0]" placeholder="" value="">
+							</div>
+
+							<div class="form-group">
+							    <label for="portfoliodescription[0]" class="">Description</label>
+							    <textarea class="form-control" name="portfoliodescription[0]" rows="5"></textarea>
+							</div>
+
+							<div class="form-group">
+							    <label for="portfoliourl[0]" class="">URL</label>
+							    <input type="text" class="form-control" name="portfoliourl[0]" placeholder="" value="">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<% } %>
+
+			</div>
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<button id="addportfolio" class="form-control btn btn-link">+ Add Portfolio Item</button>
+			</div>
+		</div><!-- end of portfolio section -->
+
+		<hr class="divider">
+	    <h3>Location</h3>
+	    <div class="row" >
+	        <div class="col-md-12" id="add-input-section">
+
+	            <!--<h4>Add new address</h4>-->
+	            <div class="row">
+		            <div class="form-group col-md-6">
+			            <label for="street">Street</label>
+			            <input type="text" name="street" id="street" class="form-control" value="<%=!!user.location.street?user.location.street:''%>">
+		            </div>
+
+		            <div class="form-group col-md-2">
+			            <label>Suite/Apt</label>
+			            <input type="text" name="suite" id="suite" class="form-control" value="<%=!!user.location.suite?user.location.suite:''%>">
+		            </div>
+
+					<div class="form-group col-md-4">
+						<label>City</label>
+						<input type="text" name="city" id="city" class="form-control" value="<%=user.location.city?user.location.city:''%>">
+					</div>
+
+				</div>
+
+	            <div class="row">
+
+		            <div class="form-group col-md-5">
+		            	<!--<label>Country</label>-->
+
+						<label for="country" class="">Country</label>
+						<select name="country" id="country" class="form-control" value="<%=user.location.country%>">
+							<option value="" selected="selected">Select Country</option>
+							<% for(var i=0; i<countries.length; i++) { %>
+
+							<option value="<%= countries[i].alpha2%>" <%=countries[i].alpha2==user.location.country ? 'selected' : ''%> ><%= countries[i].name%></option>
+
+							<% } %>
+
+						</select>
+		            </div>
+		            <div class="form-group col-md-4">
+
+						<label>State</label>
+			            <input type="text" name="state" id="state" class="form-control" value="<%=!!user.location.state?user.location.state:''%>">
+		            </div>
+		            <div class="form-group col-md-3">
+			            <label>Zip Code</label>
+						<input type="text" name="zip" id="zip" class="form-control" value="<%=!!user.location.zip?user.location.zip:''%>">
+		            </div>
+	            </div>
+
+	        </div>
+
+			<div class="col-md-6">
+		        <div class="list-group suggested"></div>
+			</div>
+
+	    </div>
+
+		<% if (user.stripe.account.userId === undefined) { %>
+
+		<hr class="divider">
+		<a name="stripe"></a>
+		<h3>Stripe Account</h3>
+		<div class="row" >
+			<div class="col-sm-12">
+				<a href="<%= stripeConnectUrl %>?response_type=code&client_id=<%= stripeClientId %>&scope=read_write" class="stripe-connect">
+					<span>Connect with Stripe</span>
+				</a>
+			</div>
+		</div>
+
+		<% } %>
+
+		<hr class="divider">
+		<div class="row">
+			<div class="form-group">
+		    	<div class="col-sm-offset-8 col-sm-4">
+			      <button type="submit" class="btn btn-primary form-control input-lg">Save Changes</button>
+			    </div>
+			</div>
+		</div>
+
+	</form>
+
+</div><!-- container -->
+
+<% include ../partials/footer-menu.html.ejs %>
+
+<!--<script src="/assets/components/chosen/chosen.jquery.min.js"></script>-->
+<script src="/assets/javascript/redactor.js"></script>
+<script src="/assets/components/handlebars/handlebars.min.js"></script>
+<script src="/assets/javascript/formValidation.min.js" type="text/javascript"></script>
+<script src="/assets/javascript/bootstrap.min.js" type="text/javascript"></script>
+<script>
+
+function uploadProfilePhoto(source) {
+	source.form.submit();
+}
+
+$(document).on('click', '.item .close', {}, function () {
+    $(this).parent().parent().parent().remove();
+	//$('#resume').trigger("change");
+});
+
+$(function(){
+
+	//$('.chzn-select').chosen({no_results_text: 'No results matched'});
+
+	$('#description').redactor({
+		minHeight: 200, // pixels
+		source: false
+	});
+
+	$('#profile-photo .close').click(function(){
+		$('#profile-photo').html('<input type="file" name="photo" onchange="uploadProfilePhoto(this)">');
+		$('#profile-form').submit();
+	});
+
+	$('.portfolio-photo .close').click(function(){
+		$(this).parent().html('<input type="file" name="portfoliophoto[]">');
+		//$('#profile-form').submit();
+	});
+
+
+	// Account Settings
+
+	$('[name="usertype"]').change(function(){
+		var skills = [];
+		$('#options-loading').show();
+		$('#skills input:checked').each(function() {
+	        skills.push(this.value);
+	    });
+		$.get('/ajax/options',
+        	{'professions': $(this).val(), 'specialization': $('[name="specialization"]').val(), 'skills': skills},
+            function(data, status){
+	            data = JSON.parse(data);
+	            $('#specialization select').html(data.specializations);
+	            $('#specialization select').trigger('chosen:updated');
+				$('#skills').html(data.skills);
+				$('#options-loading').hide();
+		 });
+
+	});
+
+	$("#btn-changepassword").click(function(){
+		if ($('[name="newpassword"]').val() == $('[name="confirmpassword"]').val()) {
+			$.post('/ajax/changepassword', {newpassword: $('[name="newpassword"]').val(),
+				confirmpassword: $('[name="confirmpassword"]').val(),
+				oldpassword: $('[name="oldpassword"]').val()})
+			.success(function(data){
+				data = JSON.parse(data);
+				$('#password-section').find('input').val('');
+				$('#pwd_msg').fadeIn();
+				//$('#pwd_msg').html(data.1]);
+				if (data.error){
+					$('#pwd_msg').html(data.error);
+					$('#pwd_msg').addClass('bg-danger');
+					$('#pwd_msg').removeClass('bg-success');
+				}else{
+					$('#pwd_msg').html(data.success);
+					$('#pwd_msg').removeClass('bg-danger');
+					$('#pwd_msg').addClass('bg-success');
+				}
+			});
+		} else {
+			$('#pwd_msg').fadeIn();
+			$('#pwd_msg').addClass('bg-danger');
+			$('#pwd_msg').removeClass('bg-success');
+			$('#pwd_msg').html("Your new password does not match.");
+		}
+	});
+
+	/*function dates(){
+		$('[name="startdate"], [name="enddate"]').datepicker({
+			format: 'yyyy-mm-dd'
+		});
+	};
+	dates();*/
+
+	/*$('.item .close').on('click', function(e){
+		$(this).parent().fadeOut().remove();
+		$('#resume').trigger("change");
+	});*/
+
+	$('#addportfolio').on('click', function(e){
+		e.preventDefault();
+
+		var items = [],
+	    portfolioCount = [];
+	    if ($('#portfolio .well.item input.count').length >= 1) {
+		    $('#portfolio .well.item input.count').each(function(item, value) {
+				items.push(parseInt($(value).attr("value")));
+			});
+			portfolioCount.count = parseInt(Math.max.apply(null, items)) + 1;
+	    } else {
+		    portfolioCount.count = 0;
+	    }
+
+		var template = Handlebars.compile($('#tmpl_portfolio').html());
+		$(this).parent().siblings('#portfolio').append(template(portfolioCount));
+	});
+
+});
+</script>
+
+<script id="tmpl_portfolio" type="text/templates">
+	<div class="well item">
+		<input type="text" value="{{count}}" class="count hidden">
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<button type="button" class="close clearfix" aria-label="Close"><small>Remove</small> <span aria-hidden="true">&times;</span></button>
+			</div>
+		</div>
+		<div class="row">
+
+			<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="form-group">
+				    <input type="file" name="portfoliophoto[{{count}}]">
+				</div>
+			</div>
+
+			<div class="col-md-9 col-sm-9 col-xs-12">
+				<div class="form-group">
+				    <label for="portfolioname[{{count}}]" class="">Name</label>
+				    <input type="text" class="form-control" name="portfolioname[{{count}}]" placeholder="" value="">
+				</div>
+
+				<div class="form-group">
+				    <label for="portfoliodescription[{{count}}]" class="">Description</label>
+				    <textarea class="form-control" name="portfoliodescription[{{count}}]" rows="5"></textarea>
+				</div>
+
+				<div class="form-group">
+				    <label for="portfoliourl[{{count}}]" class="">URL</label>
+				    <input type="text" class="form-control" name="portfoliourl[{{count}}]" placeholder="" value="">
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<% include ../partials/footer.html.ejs %>

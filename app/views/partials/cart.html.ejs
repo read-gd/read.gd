@@ -1,0 +1,58 @@
+<% if (typeof user !== "undefined") { %>
+	<div id="cart" class="hidden">
+		<h5 id="cart-messages"></h5>
+		<!--<a href="" class="btn btn-default btn-sm">Continue Shopping <span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>-->
+		<a href="/marketplace/checkoutlist" class="btn btn-success btn-block">Checkout <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span></a>
+		<hr>
+		<div id="cart-content" class="list-group">
+	    <%
+	    var total = 0;
+	    if (user !== "undefined" && userCart !== "") {
+		  userCart.forEach(function(item){ %>
+			    <div class="list-group-item">
+				    <a href="/marketplace/<%= item.marketplaceId.toString() %>"><h4 class="list-group-item-heading"><%= item.name %></h4></a>
+				    <p class="list-group-item-text">$<%= item.price %></p>
+				    <span class="glyphicon glyphicon-remove-circle addr-remove" onclick="removeItemFromCart('<%= item._id.toString() %>')"></span>
+				</div>
+		<%  total += item.price });
+		} else { %>
+			 <p>Your cart is empty.</p>
+		<% } %>
+		</div>
+
+		<div id="cart-buttons">
+			<hr>
+			<h3>Total: <span class="text-primary">$<span id="cart-total"><%= total %></span></span></h3>
+			<!--<a href="" class="btn btn-default btn-sm">Continue Shopping <span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>-->
+			<a href="/marketplace/checkoutlist" class="btn btn-success btn-block">Checkout <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span></a>
+		</div>
+	</div>
+	<script>
+		function removeItemFromCart(cartItemId) {
+			$.post('/ajax/removefromcart', {'cart_item_id': cartItemId}).success(function(data) {
+				data = JSON.parse(data);
+				var messages = $('#cart-right #cart-messages');
+				if (data.error) {
+					$.sidr('open', 'cart-right');
+					messages.addClass('text-danger').html(data.error).fadeIn();
+					setTimeout(function(){
+						messages.fadeOut();
+						$.sidr('close', 'cart-right');
+					}, 3000);
+				} else {
+					var total = 0;
+					$('#cart-items').html(data.success);
+					$('#cart-right #cart-content').html("");
+					data.cart.forEach(function(item){
+						$('#cart-right #cart-content').append('<a href="/marketplace/'+item.marketplaceId+'" class="list-group-item"><h4 class="list-group-item-heading">'+item.name+'</h4><p class="list-group-item-text">$'+item.price+'</p><span class="glyphicon glyphicon-remove-circle addr-remove" onclick="removeItemFromCart(' + "'" + item._id + "'" + ')"></span></a>');
+						total += item.price;
+					});
+					//console.log(total);
+					$('span#cart-total').html(total);
+					$.sidr('open', 'cart-right');
+					setTimeout(function(){ $.sidr('close', 'cart-right'); }, 3000);
+				}
+			});
+		}
+	</script>
+<% } %>

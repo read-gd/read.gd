@@ -1,0 +1,13 @@
+<% include ../partials/header.html.ejs %>
+
+<div id="content" class="container">
+
+	<h1><%= project.name %><small></h1>
+	<hr class="divider">
+	<p class="lead">Are you sure you want to delete this project? <span class="pull-right"><a class="btn btn-default" href="/dashboard"><strong>No</strong></a> <a class="btn btn-primary" href="<%= "/projects/delete/"+project._id %>"><strong>Yes</strong></a></span></p>
+
+
+</div><!-- container -->
+
+<% include ../partials/footer-menu.html.ejs %>
+<% include ../partials/footer.html.ejs %>

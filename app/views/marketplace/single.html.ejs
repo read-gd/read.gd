@@ -1,0 +1,126 @@
+<% include ../partials/header.html.ejs %>
+
+
+<% if (marketplace.projectId.type !== "shortstory") { %>
+<div class="container-fluid cover-container" style="position: relative;height: 500px; padding-left: 0; padding-right: 0;" id="profile-top">
+	<div class="container" style="">
+	<div style="position: absolute; bottom: 10px;">
+	<div class="container" style="padding-left: 0; padding-right: 0; color: #fff;">
+
+			<div class="row" style="" >
+
+				<div class="col-md-3 col-sm-4 col-xs-4">
+					<% if (marketplace.coverPhoto) { %><img src="<%= marketplace.coverPhoto+'?dim=600x600' %>" class="img-thumbnail img-responsive" ><%} else { %><img src="/assets/images/kk-cover.png?dim=600x600" class="img-thumbnail img-responsive" ><% } %>
+
+				</div>
+
+				<div class="col-md-9 col-sm-8 col-xs-8" style="position: absolute; bottom: 0; right: 0;">
+						<h1 class="rs"><%= marketplace.name %></h1>
+						<% if (marketplace.author) { %>
+							<p class="author lead"><%- marketplace.author %></p>
+						<% } else { %>
+							<p class="lead"><a href="/profile/<%= marketplace.createdBy.id %>" style="color: #fff;"><%= marketplace.createdBy.name %></a></p>
+						<% } %>
+						
+						<p><strong>Published</strong> <%= moment(marketplace.createDate).fromNow() %></p>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+</div>
+
+<% } %>
+
+<div id="content" class="container marketplace">
+
+		<div class="row">
+
+			<% if (marketplace.projectId.type === "shortstory") { %>
+
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<h1><%= marketplace.projectId.name %></h1>
+						<p class="">By <a href="/profile/<%= marketplace.createdBy.id %>" class="btn-link"><%= marketplace.createdBy.name %></a> &middot; <strong>Published</strong> <%= moment(marketplace.createDate).fromNow() %></p>
+						<hr class="divider">
+					</div>
+
+					<div class="col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
+						<%- marketplace.projectId.body[0].content %>
+					</div>
+
+			<% } else { %>
+
+				<div class="col-md-3">
+					<% if (marketplace.projectId.price !== undefined) { %>
+					<div class="btn-group">
+						<div class="btn-group">
+							<input type="hidden" value="<%= marketplace.id %>" name="marketplace_id" />
+							<button type="button" class="btn btn-default">$<%= marketplace.price %></button><button type="button" class="btn btn-primary" name="buy">Buy</button>
+						</div>
+					</div>
+					<% } else { %>
+					<a href="/read/<%- marketplace.id %>" class="btn btn-primary">Read Now</a>
+
+					<% } %>
+
+				</div>
+
+				<div class="col-md-9">
+			    	<label for="description" class="">Description</label>
+					<p><%- marketplace.description ? marketplace.description : '' %></p>
+			    </div>
+
+			<% } %>
+
+		</div>
+
+</div><!-- container -->
+
+<% include ../partials/footer-menu.html.ejs %>
+
+<script src="/assets/components/background-blur/dist/background-blur.min.js"></script>
+
+<script>
+	$('#profile-top').backgroundBlur({
+	    imageURL : '<% if (marketplace.coverPhoto) { %><%= marketplace.coverPhoto+"?dim=1200x300" %><%} else { %>/assets/images/kk-cover.png?dim=600x600<% } %>',
+	    blurAmount : 30,
+	    imageClass : 'bg-blur'
+	});
+
+	$('[name="buy"]').click(function(){
+		$.post('/ajax/addtocart', {'marketplace_id': $('[name="marketplace_id"]').val()}).success(function(data){
+				data = JSON.parse(data);
+				var messages = $('#cart-right #cart-messages');
+				if (data.warning) {
+					$.sidr('open', 'cart-right');
+					messages.addClass('text-success').html(data.warning).fadeIn();
+					setTimeout(function(){
+						messages.fadeOut();
+						$.sidr('close', 'cart-right');
+					}, 3000);
+				} else if (data.error) {
+					$.sidr('open', 'cart-right');
+					messages.addClass('text-danger').html(data.error).fadeIn();
+					setTimeout(function(){
+						messages.fadeOut();
+						$.sidr('close', 'cart-right');
+					}, 3000);
+				} else {
+					var total = 0;
+					$('#cart-items').html(data.success);
+					$('#cart-right #cart-content').html("");
+					data.cart.forEach(function(item){
+						$('#cart-right #cart-content').append('<a href="/marketplace/'+item.marketplaceId+'" class="list-group-item"><h4 class="list-group-item-heading">'+item.name+'</h4><p class="list-group-item-text">$'+item.price+'</p><span class="glyphicon glyphicon-remove-circle addr-remove" onclick="removeItemFromCart(' + "'" + item._id + "'" + ')"></span></a>');
+						total += item.price;
+					});
+					//console.log(total);
+					$('span#cart-total').html(total);
+					$.sidr('open', 'cart-right');
+					setTimeout(function(){ $.sidr('close', 'cart-right'); }, 3000);
+				}
+
+		});
+	});
+</script>
+
+<% include ../partials/footer.html.ejs %>

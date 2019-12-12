@@ -1,0 +1,26 @@
+<div class="footer">
+	<div class="inner">
+		<p id="copyright" class="pull-left">a GARAKAMI company.</p>
+		<p class="pull-right"><a href="/contact">Contact</a> &middot; <a href="http://blog.kreateve.com">Blog</a> &middot; <!--<a href="/developers">Developers</a> &middot; --><a href="/terms">Terms</a> <span class="amp">&amp;</span> <a href="/privacy">Privacy</a></p>
+	</div>
+</div>
+
+<script src="/assets/components/jquery/dist/jquery.min.js"></script>
+<script src="/assets/components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/assets/javascript/jquery.sidr.min.js"></script>
+<% if (typeof user !== "undefined") { %>
+<script>
+	$('.cart').sidr({
+      name: 'cart-right',
+      side: 'right',
+      source: '#cart',
+      renaming: false,
+      onOpen: function(){
+	      $('#cart-text').html('Close Cart');
+      },
+      onClose: function(){
+	      $('#cart-text').html('View Cart');
+      }
+    });
+</script>
+<% } %>

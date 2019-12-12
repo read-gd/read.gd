@@ -1,0 +1,35 @@
+<% include ../partials/header.html.ejs %>
+
+<div id="content" class="container-fluid solutions">
+
+		<div id="sidebar" class="col-md-2">
+
+			<ul class="list-unstyled">
+				<li><input type="text" name="search" class="form-control" placeholder="Search Solutions" /></li>
+				<li><hr class="divider"></li>
+				<li><a href="">Conservation</a></li>
+				<li><a href="">Food and Agriculture</a></li>
+				<li><a href="">Global Warming</a></li>
+				<li><a href=""><strong>Infrastructure</strong></a></li>
+				<li><a href="">Surveillance</a></li>
+			</ul>
+
+		</div>
+
+
+		<div class="col-md-10">
+
+			<div class="row">
+
+				<% list.forEach(function(opportunity){ %>
+			        <% include ../partials/opportunity.html.ejs %>
+				<%});%>
+
+			</div>
+		</div>
+
+
+</div><!-- container -->
+
+<% include ../partials/footer-menu.html.ejs %>
+<% include ../partials/footer.html.ejs %>

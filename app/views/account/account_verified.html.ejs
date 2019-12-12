@@ -1,0 +1,55 @@
+<% include ../partials/header.html.ejs %>
+
+<div id="content" class="container">
+
+    <div class="col-md-8 col-md-offset-2">
+
+        <h1>Account Verified - Thank You!</h1>
+
+        <p>Your account was successfully verified. Enjoy all the features below:</p>
+        <ul>
+        	<li>Publish a Book</li>
+			<li>Browse our Marketplace</li>
+			<li>...and much more!</li>
+        </ul>
+
+		<br>
+		<p><a href="/account/login" class="btn btn-primary pull-center">Login Now</a></p>
+
+
+    </div>
+</div>
+<% include ../partials/footer-menu.html.ejs %>
+<% if(userDetails != undefined) { %>
+<script type="text/javascript">
+threads.identify('<%= userDetails.id %>', {
+	email: '<%= userDetails.email %>'
+});
+threads.track('Verified Account', {});
+</script>
+<% } %>
+<script>
+	fbq('track', 'CompleteRegistration');
+</script>
+<!-- Google Code for Registration Conversion Page -->
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 978226880;
+var google_conversion_language = "en";
+var google_conversion_format = "3";
+var google_conversion_color = "ffffff";
+var google_conversion_label = "fiewCJTPmWEQwJ260gM";
+var google_remarketing_only = false;
+/* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/978226880/?label=fiewCJTPmWEQwJ260gM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+
+<% include ../partials/footer.html.ejs %>
+
+

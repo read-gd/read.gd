@@ -1,0 +1,51 @@
+<% include ../partials/header.html.ejs %>
+
+<div class="container">
+
+	<h1>Library</h1>
+
+	<% if (items.length !== 0) { %>
+
+	<table class="projects table">
+	    <thead>
+	      <tr>
+	        <th>Date</th>
+	        <th>Titles</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+		    <% items.forEach(function(item){ %>
+
+		    <tr>
+			    <td><h3><%= moment(item.purchaseDate).fromNow() %></h3></td>
+			    <td>
+				    <div class="media">
+					  <div class="media-left pull-left">
+					    <a href="/marketplace/<%= item.marketplaceId.id %>"><img class="media-object" src="<%= item.marketplaceId.coverPhoto %>?dim=60x60" alt="<%= item.marketplaceId.name %>"></a>
+					  </div>
+					  <div class="media-body">
+					    <h4 class="media-heading"><a href="/marketplace/<%= item.marketplaceId.id %>"><%= item.marketplaceId.name %></a></h4>
+					    <p>
+						    <% item.marketplaceId.files.forEach(function(file){ %>
+								<a class="file-link btn-link" href="/<%= file.location %>"><%= file.type %></a>&nbsp;
+							<%});%>
+						</p>
+					  </div>
+					</div>
+
+				</td>
+		    </tr>
+
+		    <% }); %>
+	    </tbody>
+	</table>
+
+	<% } else { %>
+		<h4>No items purchased</h4>
+	<% } %>
+
+
+</div>
+
+<% include ../partials/footer-menu.html.ejs %>
+<% include ../partials/footer.html.ejs %>

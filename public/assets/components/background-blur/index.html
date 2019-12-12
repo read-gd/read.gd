@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Background Blur - plugin by @msurguy</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/paper/bootstrap.min.css"/>
+
+    <!--[if gte IE 9]>
+    <style type="text/css">
+        .gradient {
+            filter: none;
+        }
+    </style>
+    <![endif]-->
+
+    <style>
+        /* Container that will contain blurred image and other content */
+        #preview-container {
+            overflow: hidden;
+            position: relative;
+            width:100%;
+        }
+
+        #preview {
+            height: 300px;
+        }
+
+        /* Plugin will add this class to blurred image, providing you with control over certain aspects */
+        .bg-blur {
+            z-index: -2;
+            opacity: 0;
+            position: absolute;
+            min-height: 100%;
+            height: auto;
+            display: block;
+            top: 0;
+            max-height: none;
+            /* Add this CSS to remove transparent border around the image */
+            left: -10%;
+            width: 120%;
+        }
+
+        /*
+            An element with this class is added by the plugin to provide an overlay above the blurred image
+            It could drastically improve the appearance of the blurred image for content readability
+        */
+        .bg-blur-overlay {
+            z-index: -1;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+
+            /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&amp;0.15+0,1+100 */
+            /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+            background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwLjE1Ii8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+            background: -moz-linear-gradient(top,  rgba(0,0,0,0.15) 0%, rgba(0,0,0,1) 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.15)), color-stop(100%,rgba(0,0,0,1))); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  rgba(0,0,0,0.15) 0%,rgba(0,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  rgba(0,0,0,0.15) 0%,rgba(0,0,0,1) 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  rgba(0,0,0,0.15) 0%,rgba(0,0,0,1) 100%); /* IE10+ */
+            background: linear-gradient(to bottom,  rgba(0,0,0,0.15) 0%,rgba(0,0,0,1) 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#26000000', endColorstr='#000000',GradientType=0 ); /* IE6-8 */
+        }
+
+        /* Content */
+        #preview-container .content {
+            z-index: 1;
+            color: #FFF;
+            text-align: center;
+        }
+
+        .jumbotron {
+            background-color: inherit;
+        }
+        .jumbotron h1, .jumbotron h2 {
+            color: #FFF;
+        }
+
+        .avatar-holder {
+            overflow: hidden;
+            height: 200px;
+            text-align: center;
+            position: relative;
+        }
+
+        .avatar-container {
+            padding-top: 50px;
+        }
+
+        .avatar {
+            display: inline-block;
+            position: relative;
+        }
+
+        .avatar img {
+            width: 100px;
+            height: 100px;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            border: 5px solid rgba(255,255,255,0.8);
+            transition: 0.3s;
+            cursor: pointer;
+
+        }
+
+        .avatar img:hover {
+            border: 5px solid rgba(90,96,200,0.8);
+
+        }
+
+        .avatar-blur {
+            z-index: -2;
+            position: absolute;
+            min-height: 100%;
+            height: auto;
+            display: block;
+            top: 0;
+            max-height: none;
+            /* Add this CSS to remove transparent border around the image */
+            left: -10%;
+            width: 120%;
+        }
+
+        .tinted-thumbnails img{
+            width: 25%;
+            float:left;
+            cursor: pointer;
+        }
+
+        #tinted-holder {
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+            width:100%;
+        }
+
+        /* Plugin will add this class to blurred image, providing you with control over certain aspects */
+        .tinted-bg-blur {
+            z-index: -2;
+            opacity: 0;
+            position: absolute;
+            min-height: 100%;
+            height: auto;
+            display: block;
+            top: 0;
+            max-height: none;
+            /* Add this CSS to remove transparent border around the image */
+            left: -10%;
+            width: 120%;
+        }
+
+        /*
+            An element with this class is added by the plugin to provide an overlay above the blurred image
+            It could drastically improve the appearance of the blurred image for content readability
+        */
+        .tinted-bg-overlay {
+            z-index: -1;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+
+            /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ba43a8+0,ea4fce+62,537bad+100&amp;0.38+0,0.17+61,0.8+100 */
+            /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+            background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjYmE0M2E4IiBzdG9wLW9wYWNpdHk9IjAuMzgiLz4KICAgIDxzdG9wIG9mZnNldD0iNjElIiBzdG9wLWNvbG9yPSIjZTk0ZmNkIiBzdG9wLW9wYWNpdHk9IjAuMTciLz4KICAgIDxzdG9wIG9mZnNldD0iNjIlIiBzdG9wLWNvbG9yPSIjZWE0ZmNlIiBzdG9wLW9wYWNpdHk9IjAuMTkiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzUzN2JhZCIgc3RvcC1vcGFjaXR5PSIwLjgiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
+            background: -moz-linear-gradient(-45deg,  rgba(186,67,168,0.38) 0%, rgba(233,79,205,0.17) 61%, rgba(234,79,206,0.19) 62%, rgba(83,123,173,0.8) 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(186,67,168,0.38)), color-stop(61%,rgba(233,79,205,0.17)), color-stop(62%,rgba(234,79,206,0.19)), color-stop(100%,rgba(83,123,173,0.8))); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(-45deg,  rgba(186,67,168,0.38) 0%,rgba(233,79,205,0.17) 61%,rgba(234,79,206,0.19) 62%,rgba(83,123,173,0.8) 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(-45deg,  rgba(186,67,168,0.38) 0%,rgba(233,79,205,0.17) 61%,rgba(234,79,206,0.19) 62%,rgba(83,123,173,0.8) 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(-45deg,  rgba(186,67,168,0.38) 0%,rgba(233,79,205,0.17) 61%,rgba(234,79,206,0.19) 62%,rgba(83,123,173,0.8) 100%); /* IE10+ */
+            background: linear-gradient(135deg,  rgba(186,67,168,0.38) 0%,rgba(233,79,205,0.17) 61%,rgba(234,79,206,0.19) 62%,rgba(83,123,173,0.8) 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#61ba43a8', endColorstr='#cc537bad',GradientType=1 ); /* IE6-8 fallback on horizontal gradient */
+
+        }
+
+    </style>
+</head>
+<body>
+<a href="https://github.com/msurguy/background-blur"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:1000" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+<div id="preview-container">
+    <div id="preview">
+        <div class="container jumbotron">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="content">
+                        <h1>Image Blur Plugin</h1>
+                        <p>Ultra small plugin (4kb minified, 1.5kb gzipped) for Blurring images</p>
+                        <a href="https://twitter.com/share" style="padding-top:10px;" class="twitter-share-button" data-via="msurguy" data-hashtags="webdesign">Tweet</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h2>Switch Header Image:</h2>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-6">
+            <a href="#" class="preview-btn thumbnail">
+                <img class="img-responsive" src="https://ununsplash.imgix.net/photo-1429277096327-11ee3b761c93?q=75&fm=jpg&w=400&fit=max" alt=""/>
+            </a>
+        </div>
+
+        <div class="col-md-3 col-sm-6 col-xs-6">
+            <a href="#" class="preview-btn thumbnail">
+                <img class="img-responsive" src="https://unsplash.imgix.net/photo-1429042007245-890c9e2603af?fit=crop&fm=jpg&q=75&w=400" alt=""/>
+            </a>
+        </div>
+
+        <div class="col-md-3 col-sm-6 col-xs-6">
+            <a href="#" class="preview-btn thumbnail">
+                <img class="img-responsive" src="https://ununsplash.imgix.net/photo-1429030150151-548690082f0b?fit=crop&fm=jpg&q=75&w=400" alt=""/>
+            </a>
+        </div>
+
+        <div class="col-md-3 col-sm-6 col-xs-6">
+            <a href="#" class="preview-btn thumbnail">
+                <img class="img-responsive" src="https://unsplash.imgix.net/photo-1424746219973-8fe3bd07d8e3?fit=crop&fm=jpg&q=75&w=400" alt=""/>
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h2>Usage: </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p>Install this plugin with Bower: </p>
+            <pre>bower install background-blur</pre>
+            <p>Or manually:</p>
+            <pre>&lt;script src="jquery.min.js"&gt;&lt;/script&gt;
+&lt;script src="background-blur.min.js"&gt;&lt;/script&gt;</pre>
+            <p>Create a container which will contain the blurred image:</p>
+            <pre>&lt;div id='some-element'&gt;&lt;/div&gt;</pre>
+            <p>Then create a blurred image in that container:</p>
+            <pre>$('#some-element').backgroundBlur({
+    imageURL : 'http://URL-of-the-image',
+    blurAmount : 50,
+    imageClass : 'bg-blur'
+});</pre>
+            <p>OR Create a blurred image and fade it in:</p>
+            <pre>$('#some-element').backgroundBlur({
+    imageURL : 'http://URL-of-the-image',
+    blurAmount : 50,
+    imageClass : 'bg-blur'
+    duration: 1000, // If the image needs to be faded in, how long that should take
+    endOpacity : 1 // Specify the final opacity that the image will have
+});</pre>
+            <p>OR Create a blurred image, fade it in and switch to another image:</p>
+            <pre>// Initialize the blur
+$('#some-element').backgroundBlur({
+    imageURL : 'http://URL-of-the-image',
+    blurAmount : 50,
+    imageClass : 'bg-blur'
+    duration: 1000, // If the image needs to be faded in, how long that should take
+    endOpacity : 1 // Specify the final opacity that the image will have
+});
+
+//Switch the image
+$('#some-element').backgroundBlur('http://URL-of-another-image');</pre>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h2>More demos:</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <p>Avatar-based backgrounds (click):</p>
+            <div class="avatar-holder">
+                <div class="avatar-container">
+                    <div class="avatar">
+                        <img src="http://www.gravatar.com/avatar/54798cdd1ba8472c5011ae892bb06942?s=100" alt="@msurguy"/>
+                    </div>
+                    <div class="avatar">
+                        <img src="http://s3.amazonaws.com/uifaces/faces/twitter/gt/128.jpg" alt="@gt">
+                    </div>
+                    <div class="avatar">
+                        <img src="http://s3.amazonaws.com/uifaces/faces/twitter/mijustin/128.jpg" alt="@mijustin">
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <p>Code: </p>
+            <pre>
+$avatarHolderEl.backgroundBlur({
+    imageURL : avatars[0],
+    blurAmount : 50,
+    imageClass : 'avatar-blur'
+});
+</pre>
+
+        </div>
+        <div class="col-md-6">
+            <p>Tinted overlays:</p>
+            <div id="tinted-holder"></div>
+            <div class="tinted-thumbnails">
+                <img src="https://ununsplash.imgix.net/photo-1429277096327-11ee3b761c93?q=75&fm=jpg&w=400&fit=max" alt=""/>
+                <img src="https://unsplash.imgix.net/photo-1424746219973-8fe3bd07d8e3?fit=crop&fm=jpg&q=75&w=400" alt=""/>
+                <img src="https://ununsplash.imgix.net/photo-1429030150151-548690082f0b?fit=crop&fm=jpg&q=75&w=400" alt=""/>
+                <img src="https://unsplash.imgix.net/photo-1429042007245-890c9e2603af?fit=crop&fm=jpg&q=75&w=400" alt=""/>
+            </div>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#tinted-js" aria-controls="home" role="tab" data-toggle="tab">JS</a></li>
+                <li role="presentation"><a href="#tinted-css" aria-controls="css" role="tab" data-toggle="tab">CSS</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="tinted-js">
+                    <pre>$tintedHolderEl.backgroundBlur({
+    imageURL : 'url-of-the-image',
+    blurAmount : 10,
+    imageClass : 'tinted-bg-blur',
+    overlayClass : 'tinted-bg-overlay',
+    duration: 1000,
+    endOpacity : 1
+});</pre>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="tinted-css">
+                    <pre>.tinted-bg-blur {
+    z-index: -2;
+    opacity: 0;
+    position: absolute;
+    min-height: 100%;
+    height: auto;
+    display: block;
+    top: 0;
+    max-height: none;
+    /* Add this CSS to remove transparent border around the image */
+    left: -10%;
+    width: 120%;
+}
+
+.tinted-bg-overlay {
+    z-index: -1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZWE0ZmNlIiBzdG9wLW9wYWNpdHk9IjAuOTYiLz4KICAgIDxzdG9wIG9mZnNldD0iNjclIiBzdG9wLWNvbG9yPSIjNmE1ZmMyIiBzdG9wLW9wYWNpdHk9IjAuMTciLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzJiNjdiYyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
+    background: -moz-linear-gradient(-45deg,  rgba(234,79,206,0.96) 0%, rgba(106,95,194,0.17) 67%, rgba(43,103,188,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(234,79,206,0.96)), color-stop(67%,rgba(106,95,194,0.17)), color-stop(100%,rgba(43,103,188,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg,  rgba(234,79,206,0.96) 0%,rgba(106,95,194,0.17) 67%,rgba(43,103,188,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg,  rgba(234,79,206,0.96) 0%,rgba(106,95,194,0.17) 67%,rgba(43,103,188,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg,  rgba(234,79,206,0.96) 0%,rgba(106,95,194,0.17) 67%,rgba(43,103,188,1) 100%); /* IE10+ */
+    background: linear-gradient(135deg,  rgba(234,79,206,0.96) 0%,rgba(106,95,194,0.17) 67%,rgba(43,103,188,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5ea4fce', endColorstr='#2b67bc',GradientType=1 ); /* IE6-8 fallback on horizontal gradient */
+}
+ </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h2>Browser Support: </h2>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <ul>
+                <li>Chrome</li>
+                <li>Firefox</li>
+                <li>Safari and Safari Mobile (iOS)</li>
+                <li>IE6, IE7, IE9, IE10, IE11</li>
+                <li>Android browsers</li>
+                <li>Possibly, more. Please let me know if some browser doesn't work</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h2>Under the hood: </h2>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>This plugin utilizes SVG filter to blur the image if SVG is supported by the browser (all except IE), otherwise the plugin creates an IMG tag and applies a special IE-only filter in CSS</p>
+            <p><strong>Q: </strong>Why not simply use CSS 3 blur filter? <br/><strong>A:</strong>The browser support for SVG blur filter is much wider when it comes to older browsers.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h2><a href="http://julian.com/research/velocity/" target="_blank">Velocity.js support</a>: </h2>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>If you are using <a href="http://julian.com/research/velocity/" target="_blank">Velocity.js</a> animation library, the plugin will automatically detect its presence and make fade in/fade out animations more performant, especially on mobile. If Velocity is not present on the page, jQuery's "animate" is used</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h2>License: </h2>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>This plugin is released under MIT license, giving you permission to use for commercial and non-commercial projects</p>
+        </div>
+    </div>
+    
+</div>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js"></script>
+
+
+<script src="dist/background-blur.min.js"></script>
+<script>
+    // Scripts for demo page
+    $( document ).ready(function() {
+        var $previewEl = $('#preview');
+        var $avatarEl = $('.avatar');
+        var $avatarHolderEl = $('.avatar-holder');
+        var $tintedEl = $('.tinted-thumbnails img');
+        var $tintedHolderEl = $('#tinted-holder');
+        var images = [];
+        var avatars = [];
+        // Simple slideshow
+        $('.preview-btn').each(function(){
+            var $el = $(this);
+            var img = $el.find('img').first().attr('src');
+            images.push(img);
+
+            $el.click(function(e){
+                e.preventDefault();
+
+                $previewEl.backgroundBlur(img);
+            });
+        });
+
+        $previewEl.backgroundBlur({
+            imageURL : images[0], // URL to the image that will be used for blurring
+            blurAmount : 10, // Amount of blur (higher amount degrades browser performance)
+            imageClass : 'bg-blur', // CSS class that will be applied to the image and to the SVG element,
+            overlayClass : 'bg-blur-overlay', // CSS class of an element that will overlay the blur background (useful for additional effects or putting a spinner)
+            duration: 1000, // If the image needs to be faded in, how long that should take
+            endOpacity : 1 // Specify the final opacity that the image will have
+        });
+
+        // Avatar - based backgrounds
+        $avatarEl.each(function(){
+            var $avatar = $(this);
+            var avatarImage = $avatar.find('img').first().attr('src');
+            avatars.push(avatarImage);
+            $avatar.click(function(e){
+                e.preventDefault();
+
+                $avatarHolderEl.backgroundBlur(avatarImage);
+            });
+        });
+
+        $avatarHolderEl.backgroundBlur({
+            imageURL : avatars[0], // URL to the image that will be used for blurring
+            blurAmount : 50, // Amount of blur (higher amount degrades browser performance)
+            imageClass : 'avatar-blur' // CSS class that will be applied to the image and to the SVG element,
+        });
+
+        // Avatar - based backgrounds
+        $tintedEl.each(function(){
+            var $el = $(this);
+            var avatarImage = $el.attr('src');
+            $el.click(function(e){
+                e.preventDefault();
+                $tintedHolderEl.backgroundBlur(avatarImage);
+            });
+        });
+
+        $tintedHolderEl.backgroundBlur({
+            imageURL : images[0], // URL to the image that will be used for blurring
+            blurAmount : 10, // Amount of blur (higher amount degrades browser performance)
+            imageClass : 'tinted-bg-blur', // CSS class that will be applied to the image and to the SVG element,
+            overlayClass : 'tinted-bg-overlay', // CSS class of an element that will overlay the blur background (useful for additional effects or putting a spinner)
+            duration: 1000, // If the image needs to be faded in, how long that should take
+            endOpacity : 1 // Specify the final opacity that the image will have
+        });
+
+    });
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,219 @@
+<% include ../partials/header.html.ejs %>
+
+
+<div class="container-fluid cover-container" style="position: relative;height: 500px; padding-left: 0; padding-right: 0;" id="profile-top">
+	<div class="container" style="">
+	<div style="position: absolute; bottom: 10px;">
+	<div class="container" style="padding-left: 0; padding-right: 0; color: #fff;">
+
+			<div class="row" style="" >
+
+				<div class="col-md-3 col-sm-4 col-xs-4">
+					<% if (profile.photo) { %><img src="<%= profile.photo+'?dim=600x600' %>" class="img-thumbnail img-responsive" ><%} else { %><img src="/assets/images/kk-cover.png?dim=600x600" class="img-thumbnail img-responsive" ><% } %>
+
+				</div>
+
+				<div class="col-md-9 col-sm-8 col-xs-8" style="position: absolute; bottom: 0; right: 0;">
+						<h1 style="color: #000;"><%= profile.name %></h1>
+						<% if (profile.website) { %>
+						<div class="form-group">
+						    <p><strong><a href="<%= user.website ? user.website : '' %>" style="color: #fff;">View Website</a></strong></p>
+						</div>
+						<% } %>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+</div>
+<% if ( locals.message) {%><div style="color:red"><%= message%></div><%}%>
+<div id="content" class="container settings">
+
+
+	<!--<div class="row">
+
+
+		<div class="col-md-3">
+			<div class="btn-group">
+				<button type="button" class="btn btn-primary" disabled="">Follow</button>
+				<button type="button" id="chatMe" class="btn btn-primary">Message Me</button>
+			</div>
+		</div>
+
+
+		<div class="col-md-9">
+			<% /* %>
+			<div class="form-group">
+			    <label for="company" class="">Company Name</label>
+			    <p><%= profile.description ? profile.description : '' %></p>
+			</div>
+
+			<div class="form-group">
+			    <label for="email" class="">Email</label>
+			    <p><%= profile.email ? profile.email : '' %></p>
+			</div>
+
+			<div class="form-group">
+			    <label for="phone" class="">Phone</label>
+			    <p><%= profile.number ? profile.number : '' %></p>
+			</div>
+			<div class="form-group">
+				<label for="description" class="">About me</label>
+				<p><%- profile.description ? profile.description : '' %></p>
+			</div>
+			<% */ %>
+
+		</div>
+
+	</div>-->
+
+	<hr class="divider">
+    <h3>Published Work</h3>
+	<div class="row">
+
+		<% if (results.projects != "") { %>
+
+			<% results.projects.forEach(function(project) { %>
+
+			      <div class="col-md-3 item">
+					<a href="<%= '/marketplace/'+results.marketplaceItems[project._id]['slug'] %>" >
+						<% var projectText;
+						if(project.type === "book" || project.type === "written") {
+							projectText = "Book";
+						} else if(project.type === "shortstory") {
+							projectText = "Short Story";
+						} else if(project.type === "magazine") {
+							projectText = "Magazine";
+						} else if(project.type === "playwright") {
+							projectText = "Playwright";
+						} else if(project.type === "research") {
+							projectText = "Research Paper";
+						} else if(project.type === "screenplay") {
+							projectText = "Screenplay";
+						} %>
+
+						<span style="position: absolute; top: 1px; right: 40px; background: #fff; padding: 5px 10px;" ><%= projectText %></span>
+
+						<% if (project.coverPhoto == null) { %>
+							<img id="cover-image" src="/assets/images/kk-cover.png?dim=600x600" class="img-thumbnail img-responsive" />
+						<% } else { %>
+							<img id="cover-image" src="<%= results.marketplaceItems[project._id]['coverPhoto'] %>?dim=600x600" class="img-thumbnail img-responsive" />
+						<% } %>
+					</a>
+					<h4><a href="<%= '/marketplace/'+results.marketplaceItems[project._id]['slug'] %>" ><%- project.name %></a></h4>
+					<!--<p><%- project.description %></p>-->
+					<p class="author"><%- project.createdBy.name %></p>
+					<p><%= moment(project.createDate).fromNow() %></p>
+				</div>
+
+	      <% }); %>
+	</div>
+
+	<% } else { %>
+
+		<p class="tac"><%= profile.firstname %> has not published anything yet.</p>
+		<!--<p class="tac"><a class="btn btn-primary btn-xs" href="/projects/new/book"><strong>New Book</strong> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></p>-->
+
+	<% } %>
+
+	<% if (profile.portfolio != "") { %>
+	<hr class="divider">
+    <h3>Portfolio</h3>
+	<div class="row">
+		<% profile.portfolio.forEach(function(item) { %>
+
+	    <div class="col-md-3 item">
+			<a href="<%= item.url %>" target="_blank">
+				<% if (item.photo == null) { %>
+					<img id="cover-image" src="/assets/images/kk-cover.png?dim=600x600" class="img-thumbnail img-responsive" />
+				<% } else { %>
+					<img id="cover-image" src="<%= item.photo %>?dim=600x600" class="img-thumbnail img-responsive" />
+				<% } %>
+			</a>
+			<h4><a href="<%= item.url %>" target="_blank"><%- item.name %></a></h4>
+			<p><%- item.description %></p>
+		</div>
+
+	    <% }); %>
+	</div>
+
+
+
+	</div>
+	<% } %>
+
+	</div>
+
+
+
+
+	<% /* %>
+	<hr class="divider">
+    <h3>Location Information</h3>
+
+    <div class="row" >
+        <div class="col-md-12">
+        	<% user.locations.forEach(function(element, index, array) { %>
+				<a class="list-group-item">
+					<input type="hidden" name="locations[]" value="<%= JSON.stringify(element) %>"/>
+					<h4 class="list-group-item-heading"><%= element.street %></h4>
+					<p class="list-group-item-text"><%= element.city %>, <%= element.state %> <%= element.zip %>, <%= element.country %></p>
+				</a>
+
+        	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC358TgyO3tfVWGuChLr_LydTr1Ms6evf4"></script>
+			<script>
+			var geocoder;
+			var map;
+			function initialize() {
+			    geocoder = new google.maps.Geocoder();
+			    var latlng = new google.maps.LatLng("<%= element.lat %>","<%= element.lng %>");
+			    var mapOptions = {
+			      zoom: 16,
+			      center: latlng,
+			      disableDefaultUI: true,
+			      draggable: true,
+			      scrollwheel: false
+
+			    }
+			    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+			    var marker = new google.maps.Marker({
+				    position: latlng,
+				    map: map
+				});
+			  }
+			  google.maps.event.addDomListener(window, 'load', initialize);
+			</script>
+			<% }); %>
+			<div id="map-canvas"></div>
+        </div>
+
+    </div>
+    <% */ %>
+
+
+
+</div><!-- container -->
+
+<% include ../partials/footer-menu.html.ejs %>
+<script src="/assets/components/background-blur/dist/background-blur.min.js"></script>
+
+<script>
+	/*$('#profile-top').backgroundBlur({
+		imageURL: '<% if (profile.photo) { %><%= profile.photo+"?dim=1200x300" %><%} else { %>/assets/images/kk-cover.png?dim=600x600<% } %>',
+		blurAmount: 30,
+		imageClass: 'bg-blur'
+	});
+
+	$('#chatMe').click(function () {
+		popupWindow("/message/chat/" + "<%=user.id%>" + "/" + "<%=profile.id%>", "Chat", 900, 600);
+	});
+
+	function popupWindow(url, title, w, h) {
+		var y = window.top.outerHeight / 2 + window.top.screenY - ( h / 2)
+		var x = window.top.outerWidth / 2 + window.top.screenX - ( w / 2)
+		return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + y + ', left=' + x);
+	}*/
+
+</script>
+
+<% include ../partials/footer.html.ejs %>

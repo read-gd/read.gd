@@ -1,0 +1,21 @@
+<% include ../partials/header.html.ejs %>
+
+<div id="content" class="container">
+
+	<h1><%= project.name %></h1>
+	<p class="lead">By <a href="/profile/<%= project.createdBy.id %>" class="btn-link"><%= project.createdBy.name %></a></p>
+	<hr class="divider">
+
+	<div class="col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
+
+
+
+		<% /* project */ %>
+
+		<%- project.body[0].content %>
+	</div>
+
+</div><!-- container -->
+
+<% include ../partials/footer-menu.html.ejs %>
+<% include ../partials/footer.html.ejs %>

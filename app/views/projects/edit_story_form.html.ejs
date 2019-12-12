@@ -1,0 +1,39 @@
+<% include ../partials/header-no-menu.html.ejs %>
+
+	<div id="sidebar" class="hidden">
+		<% if (project.coverPhoto == null) { %>
+			<img id="cover-image" src="/assets/images/kk-cover.png" class="img-responsive" />
+		<% } else { %>
+			<img id="cover-image" src="<%= project.coverPhoto %>" class="img-responsive" />
+		<% } %>
+		<form class="form project-photo-form" id="photo-upload-form" role="form" method="post" action="/projects/coverphoto/<%= project._id %>" enctype="multipart/form-data">
+			<div class="form-group">
+				<div class="pull-left">
+					<input type="file" name="photo" onchange="uploadCoverPhoto(this)">
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</form>
+
+		<a href="<%= "/projects/publish/"+project._id %>"  class="btn btn-primary btn-sm">Publish<span class="glyphicon glyphicon-send" aria-hidden="true"></span></a>
+		<br><br>
+
+	</div>
+
+	<input type="hidden" id="project_id" name="project_id" value="<%= project._id %>">
+	<input type="hidden" id="section_id" name="section_id" value="<%= project.body[0].id %>">
+
+	<div id="content" class="container">
+
+		<div class="col-md-8 col-md-offset-2" id="content-body">
+			<textarea name="text-container" id="editable-container">
+				<% if (project.body[0]) {%>
+					<%= project.body[0].content %>
+				<% } %>
+			</textarea>
+		</div>
+	</div><!-- container -->
+
+<script src="/assets/javascript/editor.js"></script>
+
+<% include ../partials/footer.html.ejs %>

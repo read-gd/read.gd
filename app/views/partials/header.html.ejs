@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en-US">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="HandheldFriendly" content="True">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+	<title>read.gd - the world's largest library</title>
+    <meta name="description" content="The best way to publish your book">
+    <meta name="keywords" content="ebook publishing, self publishing, ebook, book publishing, ebook distribution, book marketing, epub, mobi, ebook conversion, kreateve">
+    <meta name="author" content="read.gd">
+    <meta name="company" content="read.gd">
+    <meta name="copyright" content="Copyright (c) 2018 read.gd">
+
+    <link rel="shortcut icon" type="image/png" href="/assets/images/favicon.ico">
+
+    <link rel="dns-prefetch" href="https://read.gd">
+
+    <meta property="og:site_name" content="read.gd">
+    <meta property="fb:app_id" content="{SOCIAL_FACEBOOK_APP_ID}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://read.gd">
+    <meta property="twitter:site" content="@readgoodhq">
+
+	<!-- CSS STYLES -->
+	<link rel="stylesheet" href="/assets/stylesheets/redactor.css">
+	<link rel="stylesheet" href="/assets/stylesheets/jquery.sidr.light.css">
+	<link rel="stylesheet" href="/assets/stylesheets/style.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<!-- Facebook Pixel Code -->
+	<script>
+	!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+	n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+	n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+	t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+	document,'script','//connect.facebook.net/en_US/fbevents.js');
+
+	fbq('init', '372688092930514');
+	fbq('track', "PageView");</script>
+	<noscript><img height="1" width="1" style="display:none"
+	src="https://www.facebook.com/tr?id=372688092930514&ev=PageView&noscript=1"
+	/></noscript>
+	<!-- End Facebook Pixel Code -->
+
+	<!--Start of Zopim Live Chat Script-->
+	<script type="text/javascript">
+	window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
+	d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
+	_.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute("charset","utf-8");
+	$.src="//v2.zopim.com/?3ADUQirUmaONLAE9ptFMYPUdgTHbUzcJ";z.t=+new Date;$.
+	type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");
+	</script>
+	<!--End of Zopim Live Chat Script-->
+
+	<script type="text/javascript">
+		var userId = "<%=( typeof user !== "undefined" ? user.id : null)%>";
+		var userName = "<%=( typeof user !== "undefined" ? user.firstname : null)%>";
+		var userEmail = "<%=( typeof user !== "undefined" ? user.email : null)%>";
+	</script>
+
+	<script src="/assets/components/jquery/dist/jquery.min.js"></script>
+	<script src="/assets/javascript/moment.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/assets/javascript/chatmonitor.js"></script>
+
+
+
+</head>
+
+<body class="">
+
+	<header id="masthead" class="clearfix">
+		<div class="container-fluid">
+			<nav class="navbar navbar-default" role="navigation">
+
+			  <!-- Brand and toggle get grouped for better mobile display -->
+			  <div class="navbar-header">
+
+				    <a class="navbar-brand tac" href="/dashboard">
+				      <img src="/assets/images/read-logo.png" height="40">
+				    </a>
+
+				    <!--<ul class="nav navbar-nav masthead-nav nav-left pull-left">
+						<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">New <span class="caret"></span></a>
+		                 <ul class="dropdown-menu">
+		                    <li id=""><a href="/projects/new">Project</a></li>
+		                    <li id=""><a href="/opportunities/new">Opportunity</a></li>
+		                  </ul>
+						  </li>
+					</ul>-->
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				      <span class="sr-only">Toggle navigation</span>
+				      <span class="icon-bar"></span>
+				      <span class="icon-bar"></span>
+				      <span class="icon-bar"></span>
+				    </button>
+			  </div>
+
+			  <!-- Collect the nav links, forms, and other content for toggling -->
+			  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			    <% if (typeof user !== "undefined") { %>
+			    <ul class="nav navbar-nav masthead-nav navbar-right">
+
+					<li class="chat-invite"><a  href="#" id="chatIcon"><span class="glyphicon glyphicon-bell chat-invite"></span></a></li>
+
+
+			    	<% if (user.isAdmin === true ) { %>
+		      		<li class="">
+						<a class="btn btn-default dropdown-toggle" type="button" id="admin" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="text-danger">Admin</span>
+							<span class="caret text-danger"></span>
+						</a>
+						<ul class="dropdown-menu" aria-labelledby="admin">
+							<li><a href="/admin/individuals">View All Users</a></li>
+							<li><a href="/admin/projects">View All Projects</a></li>
+						</ul>
+					</li>
+					<% } %>
+
+
+		      		<li class=""><a href="/dashboard">Dashboard</a></li>
+					<!--<li class=""><a href="/services">Services</a></li>
+					<li class=""><a href="/opportunities">Opportunities</a></li>-->
+					<li class=""><a href="/library">Library</a></li>
+					<li class=""><a href="/marketplace">Marketplace</a></li>
+					<li><a href="/account/settings">Settings</a></li>
+					<li><a href="/account/logout">Logout</a></li>
+					<li class="divider hidden-sm hidden-xs"><a >&middot;</a></li>
+					<li><a class="cart" href="#cart"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> <spane id="cart-text">View Cart</spane> <sup><span id="cart-items" class="text-primary"><%= userCart ? userCart.length : '0' %></span></sup> <span class="text-muted" id="cart-close" aria-hidden="true">&times;</span></a></li><% } %>
+
+		       </ul>
+			  </div><!-- /.navbar-collapse -->
+			</nav>
+		</div><!-- /.container-fluid -->
+	</header>
+	<div class="container"><p id="user-messages"></p></div>
+	<% include ../partials/cart.html.ejs %>

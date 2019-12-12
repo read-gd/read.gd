@@ -1,0 +1,73 @@
+<% include ../partials/header-no-menu.html.ejs %>
+
+	<div id="content" class="container">
+
+		<h1>Edit Solution</h1>
+		<hr class="divider">
+
+		<form class="form" role="form" method="post" enctype="multipart/form-data">
+			<div class="form-group">
+			    <label for="title" class="control-label">Title</label>
+			      <input type="text" class="form-control" name="title" placeholder="Title" value="<%= opportunity.title %>">
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+
+					<div class="form-group">
+						<label for="category" class="control-label">Category</label>
+						<select name="category" class="form-control">
+							<option value="<%= opportunity.category %>"><%= opportunity.category %></option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label for="category" class="control-label">Reward</label>
+						<div class="input-group">
+						  <span class="input-group-addon">$</span>
+						  <input type="text" name="reward" class="form-control" value="<%= opportunity.reward %>">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="files" class="control-label">Supplementary Files</label>
+						<input type="file" name="files[]" multiple>
+					</div>
+
+				</div>
+
+				<div class="col-md-6">
+
+					<div class="form-group">
+					    <label for="problem" class="control-label">The Problem</label>
+					    <textarea class="form-control" name="problem" rows="16"><%= opportunity.problem %></textarea>
+					</div>
+
+					<div class="form-group">
+					    <label for="moredetails" class="control-label">More Details</label>
+					    <textarea class="form-control" name="moredetails" rows="8"><%= opportunity.moredetails %></textarea>
+					</div>
+
+				</div>
+			</div>
+
+			<hr class="divider">
+
+			<div class="row">
+				<div class="form-group">
+					<div class="col-sm-offset-8 col-sm-4">
+					  <button type="submit" class="btn btn-primary form-control input-lg">Update <span class="glyphicon glyphicon-chevron-right"></span></button>
+					</div>
+				</div>
+			</div>
+
+		</form>
+
+
+
+
+
+	</div><!-- container -->
+
+<% include ../partials/footer-menu.html.ejs %>
+<% include ../partials/footer.html.ejs %>

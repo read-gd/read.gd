@@ -1,0 +1,70 @@
+<% include ../partials/header-not-logged-in.html.ejs %>
+
+<div id="content" class="container">
+
+	<div class="col-md-6 col-md-offset-3">
+
+	    <h1>Forgot Password</h1>
+	    <hr>
+	    <form method="post" >
+			<p id="reset_msg" class="col-md-12"></p>
+			<% if (message) { %> <p id="err_msg" class="col-md-12 bg-danger"><%=message%></p><% } %>
+	        <div class="form-group">
+			    <label for="email" class="">Email</label>
+			    <input type="text" class="form-control" id="email" name="email" placeholder="Email" value="">
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-sm-6 pull-right">
+						<button type="button" class="btn btn-primary form-control " id="btn-resetpasswd">Reset Password<span class="glyphicon glyphicon-chevron-right"></span></button>
+					</div>
+				</div>
+			</div>
+	    </form>
+	    <br/>
+
+
+   </div>
+</div><!-- container -->
+
+<% include ../partials/footer-menu.html.ejs %>
+
+<script>
+
+	$(function () {
+
+
+		$("#btn-resetpasswd").click(function () {
+			if (!! $('[name="email"]').val()) {
+				$.post('/account/reset', {
+					email: $('[name="email"]').val()
+				})
+						.success(function (data) {
+							data = JSON.parse(data);
+							$('#reset_msg').fadeIn();
+							//$('#pwd_msg').html(data.1]);
+							if (data.error) {
+								$('#err_msg').empty();
+								$('#reset_msg').html(data.error);
+								$('#reset_msg').addClass('bg-danger');
+								$('#reset_msg').removeClass('bg-success');
+							} else {
+								$('#err_msg').empty();
+								$('#reset_msg').html(data.success);
+								$('#reset_msg').removeClass('bg-danger');
+								$('#reset_msg').addClass('bg-success');
+							}
+						});
+			} else {
+				$('#reset_msg').fadeIn();
+				$('#reset_msg').addClass('bg-danger');
+				$('#reset_msg').removeClass('bg-success');
+				$('#reset_msg').html("Email is mandatory!");
+			}
+		});
+
+	});
+</script>
+
+<% include ../partials/footer.html.ejs %>

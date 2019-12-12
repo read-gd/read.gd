@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en-US">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="HandheldFriendly" content="True">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+	<title>read.gd - the world's largest library</title>
+    <meta name="description" content="The best way to publish your book">
+    <meta name="keywords" content="ebook publishing, self publishing, ebook, book publishing, ebook distribution, book marketing, epub, mobi, ebook conversion, kreateve">
+    <meta name="author" content="read.gd">
+    <meta name="company" content="read.gd">
+    <meta name="copyright" content="Copyright (c) 2018 read.gd">
+
+    <link rel="shortcut icon" type="image/png" href="/assets/images/favicon.ico">
+
+    <link rel="dns-prefetch" href="https://read.gd">
+
+    <meta property="og:site_name" content="read.gd">
+    <meta property="fb:app_id" content="{SOCIAL_FACEBOOK_APP_ID}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://read.gd">
+    <meta property="twitter:site" content="@kreatevehq">
+
+	<!-- CSS STYLES -->
+    <link rel="stylesheet" href="/assets/stylesheets/style.css">
+	<link rel="stylesheet" href="/assets/stylesheets/jquery.sidr.light.css">
+	<link media="all" type="text/css" rel="stylesheet" href="/assets/stylesheets/redactor.css">
+
+	<script src="/assets/components/jquery/dist/jquery.min.js"></script>
+	<script src="/assets/javascript/redactor.min.js"></script>
+	<script src="/assets/javascript/imagemanager.js"></script>
+	<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+	<script src="/assets/components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="/assets/javascript/jquery.sidr.min.js"></script>
+	<script src="/assets/javascript/table.js"></script>
+	<script src="/assets/javascript/fullscreen.js"></script>
+
+</head>
+
+<body class="edit">
+	<div id="menu-background"></div>
+	<header id="masthead" class="clearfix">
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+			  <!-- Brand and toggle get grouped for better mobile display -->
+			  <div class="navbar-header">
+				    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				      <span class="sr-only">Toggle navigation</span>
+				      <span class="icon-bar"></span>
+				      <span class="icon-bar"></span>
+				      <span class="icon-bar"></span>
+				    </button>
+				    <a class="navbar-brand tac" href="/dashboard">
+				      <!--<img id="logo" src="/assets/images/read-logo.png" height="40">-->
+				    </a>
+				    <span class="menu glyphicon glyphicon-th-list"></span>
+			  </div>
+
+			  <!-- Collect the nav links, forms, and other content for toggling -->
+			  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			    <ul class="nav navbar-nav masthead-nav navbar-right">
+			    	<% if (typeof user !== "undefined") { if (user.isAdmin === true) { %>
+		      		<li class="">
+						<a class="btn btn-default dropdown-toggle" type="button" id="admin" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="text-danger">Admin</span>
+							<span class="caret text-danger"></span>
+						</a>
+						<ul class="dropdown-menu" aria-labelledby="admin">
+							<li><a href="/admin/individuals">View All Users</a></li>
+							<li><a href="/admin/projects">View All Projects</a></li>
+						</ul>
+					</li>
+					<% }} %>
+		      		<li class=""><a href="/dashboard">Dashboard</a></li>
+			  		<!--<li class=""><a href="/services">Services</a></li>
+					<li class=""><a href="/opportunities">Opportunities</a></li>-->
+					<li class=""><a href="/library">Library</a></li>
+					<li class=""><a href="/marketplace">Marketplace</a></li>
+					<li><a href="/account/settings">Settings</a></li>
+					<li><a href="/account/logout">Logout</a></li>
+					<li class="divider"><a >&middot;</a></li>
+					<li><a class="cart" href="#cart"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> <spane id="cart-text">View Cart</spane> <sup><span id="cart-items" class="text-primary"><%= userCart ? userCart.length : '0' %></span></sup></a></li>
+		       </ul>
+			  </div><!-- /.navbar-collapse -->
+
+
+			</div><!-- /.container-fluid -->
+		</nav>
+
+	</header>
+	<div class="container"><p id="user-messages"></p></div>
+	<% include ../partials/cart.html.ejs %>

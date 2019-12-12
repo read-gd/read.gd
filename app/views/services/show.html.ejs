@@ -1,0 +1,185 @@
+<% include ../partials/header.html.ejs %>
+
+<style type="text/css">
+
+	#coolmenu a{
+		display: block;
+		width: 100%;
+		color: black;
+	}
+
+	html>body #coolmenu a{ /*Non IE rule*/
+		width: auto;
+	}
+
+	#coolmenu a:hover{
+		background-color: black;
+		color: white;
+	}
+
+</style>
+
+
+<div id="content" class="container-fluid services">
+	<div class="col-md-12">
+
+		<div class="row">
+
+			<div id="sidebar" class="col-md-2">
+
+				<!--<h4>Categories</h4>-->
+				<ul class="list-unstyled">
+					<li><input type="text" name="search" class="form-control" placeholder="Search Service Providers" /></li>
+					<li><hr class="divider"></li>
+					<div id="coolmenu">
+						<li><a href="/services">All</a></li>
+						<!--<li><a href="/services/author">Authors</a></li>-->
+						<li><a href="/services/designer">Designers</a></li>
+						<li><a href="/services/editor">Editors</a></li>
+						<li><a href="/services/publicist">Publicists</a></li>
+					</div>
+				</ul>
+
+				<hr>
+				<h3>Filters</h3>
+
+				<div class="form-group">
+					<form id="form">
+						<label>Location</label>
+						<%
+						for( var x in countryNameList){
+						%>
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="<%=countryNameList[x].code%>" name="countryChk" value="<%=countryNameList[x].code%>"> <%=countryNameList[x].description%>
+							</label>
+						</div>
+						<%
+						}
+						%>
+					</form>
+				</div>
+
+				<div class="form-group">
+					<script>function outputUpdate1(experience) { document.querySelector('#experience').value = experience+"+ years"; }</script>
+					<label>Experience &middot; <output for="experience" id="experience" class="">5+ years</output></label>
+					<input class="form-control" type="range" name="experience" min="1" max="10" value="5" onchange="outputUpdate1(value)">
+				</div>
+
+				<div class="form-group">
+					<script>function outputUpdate2(rating) { document.querySelector('#rating').value = rating; }</script>
+					<label>Rating &middot; <output for="rating" id="rating" class="">3</output></label>
+					<input class="form-control" type="range" name="rating" min="1" max="5" value="3" onchange="outputUpdate2(value)">
+				</div>
+
+				<div class="form-group">
+					<script>function outputUpdate3(cost) { document.querySelector('#cost').value = "$"+cost; }</script>
+					<label>Cost &middot; <output for="cost" id="cost" class="">$200</output></label>
+					<input class="form-control" type="range" name="cost" min="100" max="500" value="200" onchange="outputUpdate3(value)">
+				</div>
+
+			</div>
+
+			<div class="col-md-10">
+				<div class="row">
+
+					<%
+					var count = 0;
+					for ( var i = 0; i < list.length; i++){
+						service = list[i];
+
+						var countryCode = "US";
+						if(!!service.locations[0] && !!service.locations[0].country){
+							countryCode = service.locations[0].country;
+						}
+
+						count++;
+					%>
+					<div class= "<%='imgdiv'+countryCode%>">
+						<div class="col-md-3 item">
+							<a href="/profile/<%=service._id %>"><% if (service.photo) { %><img src="<%= service.photo+'?dim=600x600' %>" class="img-responsive img-thumbnail"><%} else {%><img src="/assets/images/kk-cover.png?dim=600x600" class="img-responsive img-thumbnail" /><% } %></a>
+							<h4><a href="/profile/<%=service._id %>"><%= service.firstname + " " + service.lastname %></a></h4>
+							<p class="author">Rating &middot; &middot; &middot; &middot; <span class="pull-right"><small><span class="glyphicon glyphicon-star"></span> Save</small></span></p>
+						</div>
+					</div>
+					<%if (count % 4 === 0) { %>
+						<div class="clearfix visible-md visible-lg"></div>
+					<% } %>
+					<%}%>
+				</div>
+			</div>
+		</div>
+	</div>
+</div><!-- container -->
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+
+	window.onload = function() {
+		$('.checkbox input:checkbox').attr('checked', 'checked');
+
+		var opts = getCountryFilterOptions();
+
+		for ( var a=0; a<opts.length; a++){
+			$(".imgdiv"+opts[a]).show();
+		}
+
+	}
+
+	function getUserCountries(){
+
+		var opts = [];
+
+		$checkboxes.each(function(){
+			for( var x in countryNameList){
+				opts.push(this.id);
+			}
+
+		});
+		return opts;
+	}
+
+	function getCountryFilterOptions(){
+		var opts = [];
+		$checkboxes.each(function(){
+			if(this.checked){
+				opts.push(this.id);
+			}
+		});
+		return opts;
+	}
+
+	function getUncheckCountryFilterOptions(){
+		var opts = [];
+		$checkboxes.each(function(){
+			if(!this.checked){
+				opts.push(this.id);
+			}
+		});
+		return opts;
+	}
+
+	var $uncheckboxes = $("input:checkbox:not(:checked)")
+	$uncheckboxes.on("change", function(){
+		var opts = getUncheckCountryFilterOptions();
+
+		for ( var a=0; a<opts.length; a++){
+			$(".imgdiv"+opts[a]).hide();
+		}
+	});
+
+	var $checkboxes = $("input:checkbox");
+	$checkboxes.on("change", function(){
+		var opts = getCountryFilterOptions();
+
+		for ( var a=0; a<opts.length; a++){
+			$(".imgdiv"+opts[a]).show();
+		}
+	});
+
+	$uncheckboxes.trigger("change");
+	$checkboxes.trigger("change");
+</script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC358TgyO3tfVWGuChLr_LydTr1Ms6evf4"></script>
+<% include ../partials/footer-menu.html.ejs %>
+<% include ../partials/footer.html.ejs %>

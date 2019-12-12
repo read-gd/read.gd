@@ -1,0 +1,96 @@
+<% include ../partials/header.html.ejs %>
+
+<div id="content" class="container settings">
+
+
+
+    <h1>Change your password</h1>
+    <hr>
+
+    <form class="form" role="form" method="post" id="resetpasswd">
+
+        <p id="pwd_msg" class="col-md-12"></p>
+
+
+        <div class="row" id="password-section">
+
+
+            <input type="hidden" name="token" value="<%=token%>" >
+            <input type="hidden" name="email" value="<%=email%>">
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="newpassword" class="">New Password</label>
+                    <input type="password" class="form-control" name="newpassword" placeholder="New Password">
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="confirmpassword" class="">Confirm Password</label>
+                    <input type="password" class="form-control" name="confirmpassword" placeholder="Confirm Password">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="" class="">&nbsp;</label>
+                <input type="submit" class="btn btn-primary form-control" value="Change Password">
+                <!--<a class="form-control btn btn-primary" id="btn-changepassword">Change Password</a>-->
+            </div>
+        </div>
+
+    </form>
+
+</div><!-- container -->
+
+<% include ../partials/footer-menu.html.ejs %>
+
+<!--<script src="/assets/components/chosen/chosen.jquery.min.js"></script>-->
+<script src="/assets/javascript/redactor.js"></script>
+<script src="/assets/components/handlebars/handlebars.min.js"></script>
+<script src="/assets/javascript/formValidation.min.js" type="text/javascript"></script>
+<script src="/assets/javascript/bootstrap.min.js" type="text/javascript"></script>
+<script>
+
+
+//    var onAddressRemove = '';
+//
+//    $(function () {
+//
+//        $("#btn-changepassword").click(function () {
+//            if ($('[name="newpassword"]').val() == $('[name="confirmpassword"]').val()) {
+//                $.post('/ajax/setpassword', {
+//                    newpassword: $('[name="newpassword"]').val(),
+//                    confirmpassword: $('[name="confirmpassword"]').val(),
+//                    email: $('[name="email"]').val(),
+//                    token: $('[name="token"]').val()
+//                })
+//                        .success(function (data) {
+//                            data = JSON.parse(data);
+//                            $('#password-section').find('input').val('');
+//                            $('#pwd_msg').fadeIn();
+//                            //$('#pwd_msg').html(data.1]);
+//                            if (data.error) {
+//                                $('#pwd_msg').html(data.error);
+//                                $('#pwd_msg').addClass('bg-danger');
+//                                $('#pwd_msg').removeClass('bg-success');
+//                            } else {
+//                                $('#pwd_msg').html(data.success);
+//                                $('#pwd_msg').removeClass('bg-danger');
+//                                $('#pwd_msg').addClass('bg-success');
+//                            }
+//                        });
+//            } else {
+//                $('#pwd_msg').fadeIn();
+//                $('#pwd_msg').addClass('bg-danger');
+//                $('#pwd_msg').removeClass('bg-success');
+//                $('#pwd_msg').html("Your new password does not match.");
+//            }
+//        });
+//
+//
+//    });
+
+
+</script>
+
+<% include ../partials/footer.html.ejs %>

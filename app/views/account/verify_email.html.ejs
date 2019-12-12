@@ -1,0 +1,65 @@
+<% include ../partials/header.html.ejs %>
+
+<div id="content" class="container">
+
+    <div class="col-md-8 ">
+
+        <h1>Welcome to Kreateve!</h1>
+
+        <p>
+            We have sent you an email with a link to verify your account.
+            <br>
+            Verified accounts can enjoy the following features:
+            <ul>
+            	<li>Publish a Book</li>
+				<li>Browse our Marketplace</li>
+				<li>...and much more!</li>
+            </ul>
+        </p>
+
+        <p><a href="/account/login" class="btn btn-link pull-center">Login Now</a></p>
+
+    </div>
+<div class="col-md-4">
+
+    <h3>Share kreateve with friends</h3>
+    <!-- Facebook -->
+    <div class="facebookshare col-md-3 text-center">
+        <a href="javascript:void(0);" target="popup" onclick="window.open('https://www.facebook.com/sharer/sharer.php?sdk=joey&u=<%= baseUrl %>&display=popup&ref=plugin&src=share_button','name','width=600,height=400')" >
+            <img src="/assets/images/facebook.png" alt="Facebook" />
+
+ 
+        </a>
+    </div>
+    <!-- Google+ -->
+    <div class="facebookshare col-md-3 text-center">
+        <a href="javascript:void(0);" target="popup" onclick="window.open('https://plus.google.com/share?url=<%= baseUrl %>&display=popup&ref=plugin&src=share_button','name','width=600,height=400')" >
+
+           <img src="/assets/images/google.png" alt="Google" />
+
+        </a>
+    </div>
+    <!-- Twitter -->
+    <div class="twittershare col-md-3 text-center">
+         <a href="javascript:void(0);" target="popup" onclick="window.open('https://twitter.com/share?url=<%= baseUrl %>&amp;text=Check%20Website&amp;&display=popup&ref=plugin&src=share_button','name','width=600,height=400')" >
+            <img src="/assets/images/twitter.png" alt="Twitter" />
+
+        </a>
+    </div>
+
+</div>
+</div>
+<% include ../partials/footer-menu.html.ejs %>
+<script type="text/javascript">
+    
+threads.identify('<%= userDetails.id %>', {
+  email: '<%= userDetails.email %>',
+  first: '<%= userDetails.firstname %>',
+  last: '<%= userDetails.lastname %>',
+  country: '<%= userDetails.locations[0].country %>',
+  usertype: '<%= userDetails.usertype %>',
+  sign_up_date: '<%= userDetails.createDate %>'
+});
+threads.track('Signed Up', {});
+</script>
+<% include ../partials/footer.html.ejs %>

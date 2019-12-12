@@ -1,0 +1,84 @@
+<% include ../partials/header-no-menu.html.ejs %>
+
+<div id="sidebar" class="hidden">
+    <p>Nothing in Here</p>
+</div>
+
+
+<input type="hidden" id="project_id" name="project_id" value="<%= project._id %>">
+<input type="hidden" id="section_id" name="section_id" value="<%= project.body[0].id %>">
+
+<div id="content" class="container">
+
+    <div class="col-md-4 col-sm-4 col-xs-4">
+        <% if (project.coverPhoto == null) { %>
+        <img id="cover-image" src="/assets/images/kk-cover.png" class="img-responsive"/>
+        <% } else { %>
+
+        <img id="cover-image" src="<%=project.coverPhoto %>" class="img-responsive"/>
+        <% } %>
+        <form class="form project-photo-form" id="photo-upload-form" role="form" method="post"
+              action="/projects/coverphoto/<%=project._id%>" enctype="multipart/form-data">
+            <div class="form-group">
+                <div class="pull-left">
+                    <input type="file" name="photo" onchange="uploadCoverPhoto(this)">
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </form>
+
+    </div>
+
+    <form class="form-horizontal" name="cover-design-form" >
+        <div class="col-md-8 col-sm-4 col-xs-4">
+
+
+            <div class="form-group">
+                <label class="control-label label-lg"><h4>Cover Design Title</h4></label>
+                <input type="text" class="form-control input-lg" name="name" value="<%=project.name%>">
+                <span class="help-block"><small>Please put a descriptive name for your Cover Design.</small></span>
+            </div>
+
+
+            <div class="form-group">
+            <ul class="list-unstyled" id="files">
+                <% if (project.files) {
+                        project.files.forEach(function(file){
+                %>
+                <li class="col-md-4">
+                <img id="projectFiles" src="<%=file.location%>" class="img-responsive"/>
+                </li>
+                <% });} %>
+            </ul>
+                </div>
+
+            <br/><br/>
+            <div class="form-group">
+                <div class="col-sm-offset-8 col-sm-4">
+                    <input type="submit" class="btn btn-primary form-control input-lg" value="Save"></input>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+
+</div>
+<!-- container -->
+
+<script>
+    function uploadCoverPhoto(source) {
+        source.form.submit();
+    }
+
+    function uploadProjectFiles(source) {
+        source.form.submit();
+    }
+
+//    $('#cover-photo .close').click(function () {
+//        $('#cover-photo').html('<input type="file" name="photo" onchange="uploadProfilePhoto(this)">');
+//        $('#photo-upload-form').submit();
+//    })
+</script>
+
+<% include ../partials/footer.html.ejs %>

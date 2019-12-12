@@ -1,0 +1,42 @@
+<% include ../partials/header.html.ejs %>
+
+<div id="content" class="container">
+
+	<h1><%= opportunity.title %></h1>
+	<hr class="divider">
+
+	<div class="row">
+		<div class="col-md-4">
+
+			<label for="category" class="control-label">Category</label>
+			<p><%= opportunity.category %></p>
+
+			<label for="category" class="control-label">Reward</label>
+			<div class="input-group">
+			  <p>$<%= opportunity.reward %></p>
+			</div>
+
+			<label for="files" class="control-label">Supplementary Files</label>
+			<%= opportunity.files %>
+
+		</div>
+
+		<div class="col-md-8">
+
+			<label for="problem" class="control-label">The Problem</label>
+			<p><%= opportunity.problem %></p>
+			<br>
+
+			<label for="moredetails" class="control-label">More Details</label>
+			<p><%= opportunity.moredetails %></p>
+
+		</div>
+	</div>
+
+
+
+
+</div><!-- container -->
+
+<% include ../partials/footer-menu.html.ejs %>
+<% include ../partials/footer.html.ejs %>

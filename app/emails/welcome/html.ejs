@@ -1,0 +1,51 @@
+<% if(usertype.indexOf("author")>-1) { %>
+
+	<p>Thank you for joining the <strong>kreateve</strong> team. We're excited to help you during your writing journey, and are here to help you every step of the way!</p>
+
+	<p>Please verify your email: <a href="http://<%=hostname%>/account/verifyemail?username=<%=email%>&token=<%=token%>"><strong>Verification Link</strong></a></p>
+
+	<p>To get the most out of <strong>kreateve</strong>'s services and to ensure that you'll be meeting the best <strong>kreateve</strong> book professional suited for your needs, please visit your Settings to:</p>
+	<ul>
+		<li>Complete your profile information and choose your preferences</li>
+		<li>Upload a professional profile picture of yourself</li>
+		<li>Set up your Stripe account to manage your payment methods</li>
+		<li>Start your <a href="http://<%=hostname%>/projects/new/book">book</a>!</li>
+	</ul>
+
+
+	<p>Be sure to check out <strong>kreateve</strong>'s <a href="http://blog.kreateve.com">blog</a> for any tips and tricks for the writing, publishing, and creative process.</p>
+
+<% } else if(usertype.indexOf("editor")>-1 || usertype.indexOf("designer")>-1 || usertype.indexOf("publicist")>-1) { %>
+
+	<p>Thank you for joining the <strong>kreateve</strong> team.</p>
+
+	<p>Please verify your email: <a href="http://<%=hostname%>/account/verifyemail?username=<%=email%>&token=<%=token%>"><strong>Verification Link</strong></a></p>
+
+	<p>As a service provider on <strong>kreateve</strong> you will be contacted by various authors seeking your professional assistance. To make sure you'll be meeting clients requiring your particular brand of expertise, please visit your Settings to:</p>
+	<ul>
+		<li>Complete your profile information</li>
+		<li>Upload a professional profile picture of yourself or a personal logo</li>
+		<li>Set up your Stripe account for payment to ensure timely compensation for your services</li>
+	</ul>
+
+
+	<p>Be sure to check out <strong>kreateve</strong>'s <a href="http://blog.kreateve.com">blog</a> for any tips and tricks for the writing, publishing, and creative process.</p>
+
+<% } else { %>
+
+	<p>Thank you for joining the <strong>kreateve</strong> team. We appreciate your readership and support!</p>
+
+	<p>Please verify your email: <a href="http://<%=hostname%>/account/verifyemail?username=<%=email%>&token=<%=token%>"><strong>Verification Link</strong></a></p>
+
+	<p>To get the most out of <strong>kreateve</strong>'s services please visit your Settings to:</p>
+	<ul>
+		<li>Complete your profile information</li>
+		<li>Visit the <strong>kreateve</strong> Marketplace</li>
+	</ul>
+
+
+	<p>Be sure to check out <strong>kreateve</strong>'s <a href="http://blog.kreateve.com">blog</a> for additional information about the <strong>kreateve</strong> process.</p>
+
+<% } %>
+
+<p><a href="http://www.kreateve.com">Website</a> &middot; <a href="http://www.kreateve.com/contact/">Contact us</a> &middot; <a href="http://blog.kreateve.com">Blog</a> &middot; Follow us on <a href="http://www.facebook.com/kreatevehq">Facebook</a> and <a href="http://www.twitter.com/kreatevehq">Twitter</a></p>

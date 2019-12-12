@@ -1,0 +1,530 @@
+<% include ../partials/header.html.ejs %>
+
+<div id="content" class="container settings">
+
+	<% if ( locals.message) {%><div style="color:red"><%= message%></div><%}%>
+
+	<h1>Settings</h1>
+	<hr>
+	<br>
+	<form class="form" role="form" action="/account/settings" method="post" enctype="multipart/form-data">
+
+		<div class="row">
+			<div class="col-md-2">
+				<div class="form-group">
+				    <label>Profile photo</label>
+				    <% if (user.photo) { %><img src="<%= user.photo+'?dim=200x200' %>" class="img-thumbnail img-responsive" /><%} else { %><input type="file" name="photo"><% } %>
+				</div>
+			</div>
+
+			<div class="col-md-5">
+				<div class="form-group">
+				    <label for="username" class="">Username</label>
+				    <input type="text" class="form-control" name="username" placeholder="Username" value="<%= user.username ? user.username : '' %>">
+				  </div>
+
+				<div class="form-group">
+				    <label for="firstname" class="">First Name</label>
+				    <input type="text" class="form-control" name="firstname" placeholder="First Name" value="<%= user.firstname ? user.firstname : '' %>">
+				</div>
+
+				<div class="form-group">
+				    <label for="lastname" class="">Last Name</label>
+				    <input type="text" class="form-control" name="lastname" placeholder="Last Name" value="<%= user.lastname ? user.lastname : '' %>">
+				</div>
+			</div>
+
+			<div class="col-md-5">
+				<div class="form-group">
+				    <label for="company" class="">Company Name</label>
+				    <input type="text" class="form-control" name="company" placeholder="Company Name" value="<%= user.company ? user.company : '' %>">
+				</div>
+				<div class="form-group">
+				    <label for="email" class="">Email</label>
+				    <input type="text" class="form-control" name="email" placeholder="Email" value="<%= user.email ? user.email : '' %>">
+				</div>
+				<div class="form-group">
+				    <label for="phone" class="">Phone</label>
+				    <input type="text" class="form-control" name="number" placeholder="Phone" value="<%= user.number ? user.number : '' %>">
+				</div>
+				<div class="form-group">
+				    <label for="website" class="">Website</label>
+				    <input type="text" class="form-control" name="website" placeholder="Website" value="<%= user.website ? user.website : '' %>">
+				</div>
+			</div>
+		</div>
+
+		<hr class="divider">
+		<h3>Password</h3>
+		<p id="pwd_msg" class="col-md-12"></p>
+		<div class="row" id="password-section">
+			<div class="col-md-3">
+		        <div class="form-group">
+				    <label for="oldpassword" class="">Current Password</label>
+				    <input type="password" class="form-control" name="oldpassword" placeholder="Current Password">
+				</div>
+		    </div>
+
+			<div class="col-md-3">
+		        <div class="form-group">
+				    <label for="newpassword" class="">New Password</label>
+				    <input type="password" class="form-control" name="newpassword" placeholder="New Password">
+				</div>
+			</div>
+
+			<div class="col-md-3">
+		        <div class="form-group">
+				    <label for="confirmpassword" class="">Confirm Password</label>
+				    <input type="password" class="form-control" name="confirmpassword" placeholder="Confirm Password">
+				</div>
+			</div>
+			<div class="col-md-3">
+		        <label for="" class="">&nbsp;</label>
+		        <a class="form-control btn btn-primary" id="btn-changepassword">Change Password</a>
+			</div>
+        </div>
+
+		<hr class="divider">
+	    <h3>Placement Information</h3>
+		<div class="row">
+	        <div class="col-md-12">
+	            <div class="form-group">
+				    <label>Profession</label>
+				    <select name="usertype" class="form-control chzn-select profession" multiple>
+					    <% var professionslist = options.professions,
+					    specializationlist = [],
+					    skillsetlist = [],
+					    usertypes = JSON.parse(JSON.stringify(user.usertype));
+					    Array.prototype.contains = function(elem){
+						   for (var i in this) {
+						       if (this[i] == elem) return true;
+						   }
+						   return false;
+						}
+					    var professions = (function() {
+						    professionslist.forEach(function(item) {
+							    var specialization = item.specialization,
+							    	skillset = item.skillset,
+									value = item.name;
+
+							    if (usertypes.contains((value).toLowerCase())) {
+								   	for (var j = 0; j < skillset.length; j++) {
+									    skillsetlist.push(skillset[j]);
+									}
+								    for (var k = 0; k < specialization.length; k++) {
+									    specializationlist.push((specialization[k]).toLowerCase());
+									}
+						%>
+
+							<option value="<%= (value).toLowerCase() %>" selected><%= value %></option>
+
+						<%} else {%>
+
+							<option value="<%= (value).toLowerCase() %>"><%= value %></option>
+
+						<% }});
+
+						})();
+
+						%>
+					</select>
+					<img id="options-loading" src="/assets/images/loading.gif" style="display: none;float:right"/>
+				</div>
+			</div>
+
+			<div class="col-md-12">
+	            <div class="form-group" id="specialization">
+				    <label>Specialization</label>
+				    <select name="specialization" class="form-control chzn-select" multiple>
+					    <% var specialization = (function() {
+					    	specializationlist.forEach(function(item){
+						     	if (user.specialization.contains(item)) {
+						%>
+							<option value="<%= (item).toLowerCase() %>" selected><%= changecase.titleCase(item) %></option>
+						<%} else {%>
+							<option value="<%= (item).toLowerCase() %>"><%= changecase.titleCase(item)%></option>
+					    <% }});
+					    })(); %>
+				    </select>
+				</div>
+			</div>
+
+	        <div class="col-md-12">
+
+			    <label>Skills</label>
+
+			    <div class="row">
+			    	<div class="form-group" id="skills">
+			    		<% skillsetlist.forEach(function(item){
+					    	var skillslist = options.skills;
+					    	if (user.skills.contains(item)) {
+					    %>
+
+					    <div class="col-md-3">
+						    <div class="checkbox">
+							    <label>
+							      <input name="skills" type="checkbox" value="<%= item %>" checked="checked"> <%= skillslist[item-1].name %>
+							    </label>
+							</div>
+					    </div>
+
+					    <% } else { %>
+
+					    <div class="col-md-3">
+						    <div class="checkbox">
+							    <label>
+							      <input name="skills" type="checkbox" value="<%= item %>"> <%= skillslist[item-1].name %>
+							    </label>
+							</div>
+					    </div>
+
+						<% }}); %>
+					</div>
+			    </div>
+
+	        </div>
+
+	    </div>
+
+		<hr class="divider">
+	    <h3>Location Information</h3>
+	    <div class="row" >
+	        <div class="col-md-6" id="add-input-section">
+
+	            <h4>Add new address</h4>
+	            <div class="row">
+		            <div class="form-group col-md-10">
+			            <label for="street">Street</label>
+			            <input type="text" name="loc_street" id="loc_street" class="form-control">
+		            </div>
+
+		            <div class="form-group col-md-2">
+			            <label>Suite/Apt</label>
+			            <input type="text" name="loc_suite" id="loc_suite" class="form-control">
+		            </div>
+	            </div>
+
+	            <div class="row">
+		            <div class="form-group col-md-5">
+		            	<label>City</label>
+						<input type="text" name="loc_city" id="loc_city" class="form-control">
+		            </div>
+
+		            <div class="form-group col-md-4">
+
+						<label>State</label>
+			            <input type="text" name="loc_state" id="loc_state" class="form-control">
+		            </div>
+		            <div class="form-group col-md-3">
+			            <label>Zip Code</label>
+						<input type="text" name="loc_zip" id="loc_zip" class="form-control">
+		            </div>
+	            </div>
+
+	            <div class="row">
+		            <div class="form-group col-md-8">
+		            	<label>Country</label>
+						<select name="loc_country" id="loc_country" class="form-control">
+							<option value="US">United States</option>
+						</select>
+		            </div>
+
+		            <div class="form-group col-md-4">
+			            <label>&nbsp;</label>
+			            <a class="form-control btn btn-success" id="btn-addaddr">
+							Verify Address <span class='glyphicon glyphicon-arrow-right'></span>
+			            </a>
+		            </div>
+		        </div>
+	        </div>
+
+			<div class="col-md-6">
+		        <div class="list-group suggested"></div>
+			</div>
+
+	        <div class="col-md-6">
+	            <h4>Saved addresses</h4>
+	            <div class="list-group" id="save_addr">
+					<% user.locations.forEach(function(element, index, array) { %>
+					<a class="list-group-item">
+						<input type="hidden" name="locations" value="<%= JSON.stringify(element) %>"/>
+						<h4 class="list-group-item-heading"><%= element.street %><%= ", "+element.suite %></h4>
+						<p class="list-group-item-text"><%= element.city %>, <%= element.state %> <%= element.zip %>, <%= element.country %></p>
+						<span onclick="onAddressRemove(this)" class="glyphicon glyphicon-remove-circle addr-remove"></span>
+					</a>
+					<% }); %>
+				</div>
+	        </div>
+	    </div>
+
+		<hr class="divider">
+		<div class="row">
+			<div class="form-group">
+		    	<div class="col-sm-offset-8 col-sm-4">
+			      <button type="submit" class="btn btn-primary form-control input-lg">Save Changes <span class="glyphicon glyphicon-chevron-right"></span></button>
+			    </div>
+			</div>
+		</div>
+
+	</form>
+
+</div><!-- container -->
+
+<% include ../partials/footer-menu.html.ejs %>
+
+<script src="/assets/components/handlebars/handlebars.min.js"></script>
+<script src="/assets/components/chosen/chosen.jquery.min.js"></script>
+<script>
+
+var onAddressRemove = '';
+
+$(function(){
+
+	$('.chzn-select').chosen({no_results_text: 'No results matched'});
+
+	// Account Settings
+
+	$('[name="usertype"]').change(function(){
+		var skills = [];
+		$('#options-loading').show();
+		$('#skills input:checked').each(function() {
+	        skills.push(this.value);
+	    });
+		$.get('/ajax/options',
+        	{'professions': $(this).val(), 'specialization': $('[name="specialization"]').val(), 'skills': skills},
+            function(data, status){
+	            data = JSON.parse(data);
+	            $('#specialization select').html(data.specializations);
+	            $('#specialization select').trigger('chosen:updated');
+				$('#skills').html(data.skills);
+				$('#options-loading').hide();
+		 });
+
+	});
+
+	$("#btn-changepassword").click(function(){
+		if ($('[name="newpassword"]').val() == $('[name="confirmpassword"]').val()) {
+			$.post('/ajax/changepassword', {newpassword: $('[name="newpassword"]').val(),
+				confirmpassword: $('[name="confirmpassword"]').val(),
+				oldpassword: $('[name="oldpassword"]').val()})
+			.success(function(data){
+				data = JSON.parse(data);
+				$('#password-section').find('input').val('');
+				$('#pwd_msg').fadeIn();
+				//$('#pwd_msg').html(data.1]);
+				if (data.error){
+					$('#pwd_msg').html(data.error);
+					$('#pwd_msg').addClass('bg-danger');
+					$('#pwd_msg').removeClass('bg-success');
+				}else{
+					$('#pwd_msg').html(data.success);
+					$('#pwd_msg').removeClass('bg-danger');
+					$('#pwd_msg').addClass('bg-success');
+				}
+			});
+		} else {
+			$('#pwd_msg').fadeIn();
+			$('#pwd_msg').addClass('bg-danger');
+			$('#pwd_msg').removeClass('bg-success');
+			$('#pwd_msg').html("Your new password does not match.");
+		}
+	});
+
+
+
+	onAddressRemove = function(el){
+		$(el).parents('a.list-group-item').remove();
+	};
+
+	//suggested address clicked
+	onAddressAdd = function(el){
+		$selection = $(el).parent('a.list-group-item').children('input');
+		data = $selection.val();
+		//console.log(data);
+		obj = jQuery.parseJSON(data);
+		//console.log(obj);
+		obj.addr = data;
+		obj.country_text = $("#loc_country :selected").text();
+		$('#save_addr').append(template(obj));
+		$('#add-input-section input').val("");
+		$(el).parent().parent().empty('.suggested');
+
+	};
+
+	//var statedata = {{json_encode($state_list)}};
+	/*var states = new Bloodhound({
+	  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+	  queryTokenizer: Bloodhound.tokenizers.whitespace,
+	  // `states` is an array of state names defined in "The Basics"
+	  local: $.map(statedata, function(state) { return { value: state }; })
+	});
+
+	// kicks off the loading/processing of `local` and `prefetch`
+	states.initialize();
+
+	var makeAutoComplete = function(){
+		$('#loc_state').typeahead({
+			  hint: true,
+			  highlight: true,
+			  minLength: 1
+			},
+			{
+			  name: 'states',
+			  displayKey: 'value',
+			  // `ttAdapter` wraps the suggestion engine in an adapter that
+			  // is compatible with the typeahead jQuery plugin
+			  source: states.ttAdapter()
+			});
+	}
+
+
+	$('#loc_country').change(function(e){
+		$('#loc_state').typeahead('destroy');
+		$('#loc_state').val('');
+		if ( $(this).val() == "US"){
+			makeAutoComplete();
+		}else{
+
+		}
+	});
+
+	makeAutoComplete();*/
+
+	var template = Handlebars.compile($('#tmpl_save_addr').html());
+
+	$('#btn-addaddr').click(function(){
+		//User input address object
+		data = {
+			street: $('#loc_street').val().trim(),
+			suite: $('#loc_suite').val().trim(),
+			city: $('#loc_city').val().trim(),
+			zip: $('#loc_zip').val().trim(),
+			state: $('#loc_state').val().trim(),
+			country: $('#loc_country').val().trim()
+		}
+		data.addr = JSON.stringify(data);
+
+		data.country_text = $("#loc_country :selected").text();
+
+		//---------------------Address Verification via Google Maps API-------------------//
+		 street = data['street'].replace(/ /g, '+');
+		 suite = data['suite'].toLowerCase().replace(/\b[a-z]/g, function(letter) {
+		    		return letter.toUpperCase();
+				});
+		 city = data['city'].replace(/ /g, '+');
+		 zip = data['zip'].replace(/ /g, '+');
+		 state = data['state'].replace(/ /g, '+');
+		 country = data['country'].replace(/ /g, '+');
+		 address = street +  "+" +  city + "+" + state + "+" + zip +  "+" +country;
+
+		var url = "http://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&sensor=false";
+
+		//clean up suggested div
+		$('.suggested').empty();
+
+		//retrieve response
+		$.ajax({
+        url: url,
+            dataType: 'json',
+            cache: false,
+	        success: function (data) {
+	        	suggested = '';
+	             for (i = 0; i < data.results.length; i++) {
+	            components =  data.results[i].address_components;
+	          //  alert(data.results[i].formatted_address);
+	            var street_num = '';
+	            var street_name = '';
+	            var city = '';
+	            var state = '';
+	            var country = '';
+	            var zip = '';
+	            var lat = '';
+	            var lng = '';
+				//console.log(data.status);
+				//console.log(data.results[i]);
+				if (data.status == 'OK') {
+					//go through data results to retrive address info for each match
+					$.each(data.results[i], function(index, value) {
+
+		            	if (jQuery.type(value) === "object" || $.isArray(value)) {
+			            	$.each(value, function(index2, value2){
+
+			            		if(jQuery.type(value2) === "object" || $.isArray(value2)){
+			            			$.each(value2, function(index3, val3) {
+
+					            		if (val3 == 'street_number') { street_num = data.results[i][index][index2]['long_name'];}
+					            		if (val3 == 'route') { street_name = data.results[i][index][index2]['long_name'];}
+					            		if (val3 == 'sublocality_level_1,sublocality,political') { city = data.results[i][index][index2]['long_name'];}
+					            		if (val3 == 'administrative_area_level_1,political') { state = data.results[i][index][index2]['long_name'];}
+					            		if (val3 == 'country,political') {
+					            			country = data.results[i][index][index2]['short_name'];
+					            			country_long = data.results[i][index][index2]['long_name'];
+					            		}
+					            		if (val3 == 'postal_code') { zip = data.results[i][index][index2]['long_name'];}
+
+		            					if (index3 == 'lat') { lat = data.results[i][index][index2]['lat'];}
+		            					if (index3 == 'lng') { lng = data.results[i][index][index2]['lng'];}
+
+			            			});
+			            		}
+			            	});
+			            }
+					});
+					//match(es) address object
+		           	var street = street_num + " " + street_name;
+		            addr = {
+		            	street: street,
+						suite: suite,
+						city: city,
+						zip: zip,
+						state: state,
+						country: country,
+						lat: lat,
+						lng: lng
+		            }
+		            //List match(es) for user to select from
+		           	if ($.isEmptyObject(suite)) {} else{suite = " " + suite;}
+		           	suggested = suggested +  "<a class='list-group-item'><input type='hidden' name='temp_location[]' value='" + JSON.stringify(addr) + "' /><h4 class='list-group-item-heading'>"
+		           						+ street_num + " " + street_name + suite + "</h4><p class='list-group-item-text'>"
+		           						+ city + ", " + state + " " + zip + ", " + country_long
+		           						+ "</p><span class='addr-add' onclick='onAddressAdd(this)'><span class='glyphicon glyphicon-ok-circle'></span> Select</span></a>";
+
+				}//end if status code = OK
+				else{
+					suggested = 'No Matches found!';
+				}
+
+	        };
+	        $('div.suggested').append('<h4>Suggested Address</h4>' + suggested);
+	        },
+	        error: function (e) {
+	            //console.log(e.message);
+	             $('div.suggested').append('<h4>Suggested Address</h4>' + 'No Matches Found');
+	        }
+		});
+
+
+		//-----------------------------------------------------------//
+
+		isvalid = ""; // valid check
+		if ( true || isvalid)
+		{
+	      //$('div.list-group').append(template(data));
+	    }
+
+    	//$('#add-input-section input').val("");
+	});
+
+});
+</script>
+
+<script type="text/x-hbs" id="tmpl_save_addr">
+	<a class="list-group-item">
+		<input type="hidden" name="locations" value='{{addr}}'/>
+	    <h4 class="list-group-item-heading">{{street}} {{suite}}</h4>
+	    <p class="list-group-item-text">{{city}}, {{state}} {{zip}}, {{country_text}}</p>
+	    <span class="glyphicon glyphicon-remove-circle addr-remove" onclick='onAddressRemove(this)'></span>
+	</a>
+</script>
+
+<% include ../partials/footer.html.ejs %>

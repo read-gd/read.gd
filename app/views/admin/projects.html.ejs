@@ -1,0 +1,30 @@
+<% include ../partials/header.html.ejs %>
+
+<div id="content" class="container solutions">
+
+		<p><%= list.length %> projects</p>
+		<% list.forEach(function(project){ %>
+		    <div class="item thumbnail">
+			    <div class="row">
+					<div class="col-md-2">
+						<a href="/projects/<%= project._id %>"><% if (project.coverPhoto) { %><img src="<%= project.coverPhoto+'?dim=600x600' %>" class="img-responsive"><%} else {%><img src="/assets/images/kk-cover.png?dim=600x600" class="img-responsive" /><% } %></a>
+					</div>
+					<div class="col-md-10">
+						<h4><a href="/projects/<%= project._id %>"><%= project.name %></a></h4>
+
+						<ul class="list-unstyled list-inline">
+							<li><strong>Status</strong> <%= project.status %></li>
+							<li><strong>Added</strong> <%= moment(project.createDate).fromNow() %></li>
+
+						</ul>
+						<p><a class="btn btn-primary btn-sm" href="/projects/edit/<%= project._id %>"><strong>Edit</strong></a></p>
+					</div>
+				</div>
+			</div>
+		<%});%>
+
+
+</div><!-- container -->
+
+<% include ../partials/footer-menu.html.ejs %>
+<% include ../partials/footer.html.ejs %>

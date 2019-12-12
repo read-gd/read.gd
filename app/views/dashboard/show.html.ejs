@@ -1,0 +1,91 @@
+<% include ../partials/header.html.ejs %>
+
+<div id="content" class="container dashboard">
+
+	<% if(user.usertype.indexOf("author")>-1) { %>
+	<h1>Writing
+	<% if (results.projects != "") { %>
+		<div class="btn-group">
+			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				New <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a href="/projects/new/book">Book</a></li>
+				<li><a href="/projects/new/shortstory">Short Story</a></li>
+				<li><a href="/projects/new/research">Research Paper</a></li>
+				<li><a href="/projects/new/screenplay">Screenplay</a></li>
+				<li><a href="/projects/new/playwright">Playwright</a></li>
+				<li><a href="/projects/new/magazine">Magazine</a></li>
+			</ul>
+		</div>
+	<% } %></h1>
+	<% } else  if(user.usertype.indexOf("designer")>-1) { %>
+	<h1>Designs <% if (results.projects != "") { %><small><a class="btn btn-primary btn-xs" href="/projects/new"><strong>New Design</strong> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></small><% } %></h1>
+	<%}%>
+
+	<% if (results.projects != "") { %>
+	<div class="table-responsive">
+		<table class="projects table">
+	    <thead>
+	      <tr>
+	        <th>Title</th>
+	        <th>Status</th>
+	        <th>Created</th>
+	        <th>Actions</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <% results.projects.forEach(function(project) { %>
+	      <tr>
+	        <td><h4><a href="<%= "/projects/edit/"+project._id %>"><%= project.name %></a></h4></td>
+	        <td>
+				<% if (project.status === 'Published') { %>
+				<a class="btn-link" href="/marketplace/<%= results.marketplaceItems[project._id]['_id'] %>"><%= project.status %></a>
+				<% } else { %>
+				<%= project.status %>
+				<% } %>
+			</td>
+	        <td><%= moment(project.createDate).fromNow() %></td>
+	        <td><a href="<%= "/projects/edit/"+project._id %>"><span class="glyphicon glyphicon-pencil"></span></a> &nbsp;&nbsp;&nbsp; <a href="<%= "/projects/stats/"+project._id %>"><span class="glyphicon glyphicon-stats"></span></a> &nbsp;&nbsp;&nbsp; <a href="<%= "/projects/delete/confirm/"+project._id %>"><span class="glyphicon glyphicon-trash"></span></a></td>
+	      </tr>
+	      <% }); %>
+	     </tbody>
+	  </table>
+	</div>
+
+	<% } else { %>
+
+
+
+		<div class="well well-lg tac"><p>You do not have any projects but you can start one now.</p>
+
+			<% if(user.usertype.indexOf("author")>-1) { %>
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						New <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li><a href="/projects/new/book">Book</a></li>
+						<li><a href="/projects/new/shortstory">Short Story</a></li>
+						<li><a href="/projects/new/research">Research Paper</a></li>
+						<li><a href="/projects/new/screenplay">Screenplay</a></li>
+						<li><a href="/projects/new/playwright">Playwright</a></li>
+						<li><a href="/projects/new/magazine">Magazine</a></li>
+					</ul>
+				</div>
+			<% } else  if(user.usertype.indexOf("designer")>-1) { %>
+
+				<p><a class="btn btn-primary btn-xs" href="/projects/new/design"><strong>New Cover Design</strong> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></p>
+
+			<% } %>
+		</div>
+
+
+
+	<% } %>
+
+
+</div><!-- container -->
+
+<% include ../partials/footer-menu.html.ejs %>
+<% include ../partials/footer.html.ejs %>

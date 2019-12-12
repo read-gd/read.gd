@@ -1,0 +1,34 @@
+{
+  "name": "read.gd",
+  "version": "0.0.5",
+  "homepage": "https://github.com/read-gd/",
+  "authors": [
+    { "name": "kenroy george", "email": "<kenroy@garakami.com>" },
+    { "name": "chris kim", "email": "<sasya8080@gmail.com>" }
+  ],
+  "description": "A digital book publishing platform",
+  "main": "",
+  "keywords": [
+    "kreateve",
+    "bower"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "latest",
+    "bootstrap": "latest",
+    "bootstrap-datepicker": "latest",
+    "autocomplete": "latest",
+    "handlebars": "latest",
+    "typeahead.js": "latest",
+    "bootstrap-tagsinput":"latest"
+  }
+}

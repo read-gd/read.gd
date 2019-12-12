@@ -1,0 +1,39 @@
+{
+  "name": "background-blur",
+  "version": "0.0.5",
+  "authors": [
+    "Maks Surguy <msurguy@gmail.com>"
+  ],
+  "description": "Image blur plugin",
+  "main": "dist/background-blur.min.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "velocity",
+    "blur",
+    "animation"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "velocity": "~1.2.2"
+  },
+  "homepage": "https://github.com/msurguy/background-blur",
+  "_release": "0.0.5",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.5",
+    "commit": "b0a37818e970a6bbcd90c457559017e1581d5c1e"
+  },
+  "_source": "git://github.com/msurguy/background-blur.git",
+  "_target": "~0.0.5",
+  "_originalSource": "background-blur",
+  "_direct": true
+}
