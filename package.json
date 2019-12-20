@@ -13,7 +13,7 @@
     "country-data": "*",
     "ejs": "^3.0.1",
     "email-templates": "*",
-    "express": "3.x.x",
+    "express": "4.17.1",
     "express-hbs": "0.1.x",
     "formidable": "^1.0.15",
     "fs-extra": "^0.12.0",
